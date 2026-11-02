@@ -293,3 +293,12 @@ MIT © 2026 张勇鑫 (Zhang Yongxin)
 
 新增能力：`rfe add --pending` / `rfe pitfall add --pending`（沉淀先进待审区）→ `rfe pitfall pending-list / approve --id / reject --id` 人工审核转正；`rfe meta --set-review` 记录规则库季度复核时间戳（超 90 天 `stats` 会提示）。
 
+
+## 许可证 | License
+
+本项目以 [MIT License](LICENSE) 开源。
+
+> Copyright (c) 2026 张勇鑫 (Zhang Yongxin)
+>
+> 任何人可免费使用、修改、再分发（含商用），唯须保留上述版权与许可声明。
+> 作者姓名「张勇鑫 (Zhang Yongxin)」为唯一署名，转载请勿删改。
