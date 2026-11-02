@@ -1,0 +1,186 @@
+{
+  "meta": {
+    "domain": "硬件制造",
+    "note": "认证周期决定上市时间：先问认证，再谈开模。FTO 检索晚做等于白做。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "硬件制造",
+      "subdomain": "强制认证",
+      "rule": "如果产品在 CCC 强制认证目录内（电源、家电、部分电子设备、玩具、儿童用品等），那么必须取得 CCC 证书才能出厂销售，否则不得销售并可能被查处。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "硬件",
+        "产品",
+        "电器",
+        "电源",
+        "玩具",
+        "3c",
+        "认证"
+      ],
+      "probe": [
+        "CCC",
+        "强制认证",
+        "目录"
+      ],
+      "lead_time": "4-8 周（含整改复测）",
+      "basis": "《强制性产品认证管理规定》；CCC 目录",
+      "basis_level": "rule",
+      "verify_url": "https://www.cnca.gov.cn/",
+      "confidence": "high",
+      "note": "先确认是否在目录内：不在目录则无需 CCC，但仍需符合 GB 标准与质检要求。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "硬件制造",
+      "subdomain": "无线电",
+      "rule": "如果产品含 WiFi、蓝牙、蜂窝、RFID 等无线发射功能，那么必须取得无线电发射设备型号核准（SRRC）并加贴 CMIT ID。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "wifi",
+        "蓝牙",
+        "无线",
+        "射频",
+        "模块",
+        "联网"
+      ],
+      "probe": [
+        "SRRC",
+        "型号核准",
+        "CMIT"
+      ],
+      "lead_time": "4-8 周",
+      "basis": "《无线电管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.miit.gov.cn/",
+      "confidence": "high",
+      "note": "采用已获证的无线模块可简化流程，但整机仍需评估；换模块=重新认证。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "硬件制造",
+      "subdomain": "电池运输",
+      "rule": "如果产品含锂电池，那么必须提供 UN38.3 测试报告与 MSDS，航空/海运运输需符合危险品运输要求，否则物流拒收。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "电池",
+        "锂电",
+        "运输",
+        "物流",
+        "空运",
+        "出货"
+      ],
+      "probe": [
+        "UN38.3",
+        "MSDS",
+        "危险品"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "联合国《关于危险货物运输的建议书》；民航/海运危规",
+      "basis_level": "standard",
+      "verify_url": "https://www.caac.gov.cn/",
+      "confidence": "high",
+      "note": "出口订单常因电池文件缺失卡在货代环节，属于“货做好了发不出去”的典型死法。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "硬件制造",
+      "subdomain": "出口合规",
+      "rule": "如果出口欧盟/美国，那么须分别满足 CE（含 LVD/EMC/RoHS/REACH 等适用指令）与 FCC 要求，并指定欧盟授权代表；否则无法清关。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "出口",
+        "欧盟",
+        "美国",
+        "ce",
+        "fcc",
+        "rohs",
+        "外贸"
+      ],
+      "probe": [
+        "CE",
+        "FCC",
+        "授权代表",
+        "RoHS"
+      ],
+      "lead_time": "3-6 周",
+      "basis": "欧盟相关指令；美国 FCC 规则",
+      "basis_level": "standard",
+      "verify_url": "https://www.ec.europa.eu/",
+      "confidence": "high",
+      "note": "CE 是自我声明为主，但技术文件必须齐备，海关与平台抽查时会要求提供。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "硬件制造",
+      "subdomain": "专利",
+      "rule": "如果在立项阶段不做 FTO（自由实施）检索，那么可能在开模量产投入后遭遇专利侵权索赔或海关扣货；外观与实用新型是高频雷区。",
+      "type": "risk",
+      "severity": "redline",
+      "trigger": [
+        "专利",
+        "侵权",
+        "开模",
+        "外观",
+        "结构",
+        "仿制"
+      ],
+      "probe": [
+        "FTO",
+        "专利检索",
+        "侵权风险"
+      ],
+      "lead_time": "2-4 周（检索+规避设计）",
+      "basis": "《专利法》",
+      "basis_level": "law",
+      "verify_url": "https://www.cnipa.gov.cn/",
+      "confidence": "high",
+      "note": "“改个外观就不侵权”通常不成立：实用新型保护结构，规避设计必须由技术人员参与确认。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "硬件制造",
+      "subdomain": "产品责任",
+      "rule": "如果产品面向消费者，那么须提供中文标识（厂名厂址、执行标准、警示说明）、质保与售后，并投保产品责任险以覆盖批量质量事故。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "产品",
+        "消费者",
+        "售后",
+        "质量",
+        "召回",
+        "责任"
+      ],
+      "probe": [
+        "产品标识",
+        "执行标准",
+        "产品责任险"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《产品质量法》；《消费者权益保护法》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "一次批量安全事故足以吃掉全部利润，责任险是小成本大兜底。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

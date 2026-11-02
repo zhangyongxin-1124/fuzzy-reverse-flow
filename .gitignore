@@ -1,0 +1,26 @@
+# 私有推演案例（含真实项目信息，不对外发布）
+examples/
+examples-*/
+
+# 分发包
+dist/
+
+# 本地知识库与临时产物
+.kbtest/
+# 若把 RFE_KB 指到仓库内，知识库会被误提交（含个人项目规则与踩坑记录，属隐私数据）
+.kb/
+.kb*/
+kb_local/
+*.tmp
+__pycache__/
+*.pyc
+
+# 导出的规则快照（按需提交则删除此项）
+export*.md
+all.json
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

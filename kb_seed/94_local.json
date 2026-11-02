@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "domain": "本地生活",
+    "note": "与电商平台的关键差异：履约在线下。服务者资质、人身安全、上门风险是主要死因。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "本地生活",
+      "subdomain": "平台责任",
+      "rule": "如果平台撮合上门服务（家政、维修、保洁、护理），那么必须核验服务者身份与健康/资质证明，并提供服务过程中的保险与投诉处置机制。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "上门",
+        "家政",
+        "保洁",
+        "维修",
+        "护理",
+        "服务者",
+        "阿姨"
+      ],
+      "probe": [
+        "身份核验",
+        "健康证明",
+        "保险",
+        "投诉"
+      ],
+      "lead_time": "3-6 周（审核流程+保险采购）",
+      "basis": "《民法典》第 1198 条；《家庭服务业管理暂行办法》",
+      "basis_level": "law",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "入户服务一旦发生盗窃或伤害事件，平台若无法证明已尽审核义务，很难免责。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "本地生活",
+      "subdomain": "特殊资质",
+      "rule": "如果涉及养老服务、托育、医疗护理、餐饮加工等特殊服务，那么服务提供方须具备对应许可（养老机构备案、托育备案、医疗护理资质、食品经营许可）。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "养老",
+        "托育",
+        "护理",
+        "月嫂",
+        "陪诊",
+        "康复"
+      ],
+      "probe": [
+        "备案",
+        "许可",
+        "资质"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《养老机构管理办法》；托育机构管理规范；《医疗机构管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.mca.gov.cn/",
+      "confidence": "high",
+      "note": "“陪诊”若代问诊、代取药、代述病情，容易越界为诊疗行为，需明确服务边界。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "本地生活",
+      "subdomain": "资金与评价",
+      "rule": "如果涉及预付卡、次卡、储值，那么须纳入单用途预付卡管理并明示退款规则；平台不得挪用预付款。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "预付",
+        "储值",
+        "次卡",
+        "年卡",
+        "退款"
+      ],
+      "probe": [
+        "预付卡",
+        "退款规则",
+        "资金监管"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《单用途商业预付卡管理办法（试行）》；《消费者权益保护法实施条例》",
+      "basis_level": "rule",
+      "verify_url": "https://www.mofcom.gov.cn/",
+      "confidence": "medium",
+      "note": "预付跑路是本地生活最大的舆情与刑事风险来源，早期尽量不要碰储值。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

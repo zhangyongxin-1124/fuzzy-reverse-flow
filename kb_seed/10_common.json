@@ -1,0 +1,375 @@
+{
+  "meta": {
+    "domain": "通用",
+    "note": "凡在中国境内向公众提供互联网信息服务，无论行业，这 10 条都要过一遍。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "通用",
+      "subdomain": "主体资质",
+      "rule": "如果要以经营为目的对外提供商品或服务，那么必须先有适格主体（个体工商户或有限公司）且经营范围覆盖实际业务，否则无法签合同、开票、备案、申请许可。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "创业",
+        "做生意",
+        "收费",
+        "开票",
+        "营业执照",
+        "个体户",
+        "注册公司"
+      ],
+      "probe": [
+        "营业执照",
+        "经营范围",
+        "主体",
+        "个体户",
+        "有限公司"
+      ],
+      "lead_time": "3-10 个工作日（线上核名+登记）",
+      "basis": "《市场主体登记管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "经营范围未含“职业中介”“食品经营”“第二类增值电信业务”等条目时，后续许可申请会被退回重办，等于多等一轮。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "备案",
+      "rule": "如果服务端部署在中国内地并向境内用户提供互联网信息服务，那么必须完成 ICP 备案（网站/App/小程序），备案前域名需实名且满 3 天、服务器须为境内节点。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "网站",
+        "app",
+        "小程序",
+        "上线",
+        "域名",
+        "服务器",
+        "h5"
+      ],
+      "probe": [
+        "ICP备案",
+        "备案",
+        "域名实名"
+      ],
+      "lead_time": "7-20 个工作日（管局审核 20 个工作日内）",
+      "basis": "《互联网信息服务管理办法》（国务院令第292号）；工信部信管〔2023〕105号《关于开展移动互联网应用程序备案工作的通知》",
+      "basis_level": "regulation",
+      "verify_url": "https://beian.miit.gov.cn/",
+      "confidence": "high",
+      "note": "备案与许可是两件事：备案不等于可以经营，经营需另取许可证。小程序由平台侧统一提交备案。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "备案",
+      "rule": "如果应用要在国内安卓应用商店/App Store 上架，那么必须具备 App 备案号，且多数商店还会要求计算机软件著作权登记证书（软著）。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "上架",
+        "应用商店",
+        "app",
+        "安卓",
+        "华为",
+        "小米",
+        "oppo",
+        "应用宝"
+      ],
+      "probe": [
+        "App备案",
+        "软著",
+        "著作权",
+        "上架"
+      ],
+      "lead_time": "软著加急 3-15 个工作日，普件 30-60 个工作日",
+      "basis": "工信部 App 备案要求；各应用商店上架规范",
+      "basis_level": "platform",
+      "verify_url": "https://beian.miit.gov.cn/",
+      "confidence": "high",
+      "note": "软著是上架材料中最容易被漏掉的一项，且加急需额外费用，必须计入预算与工期。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "备案",
+      "rule": "如果网站/App 上线对外访问，那么必须在开通后 30 日内完成公安联网备案（全国互联网安全管理服务平台），并在页面底部展示备案号。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "上线",
+        "网站",
+        "公安备案",
+        "备案号"
+      ],
+      "probe": [
+        "公安备案",
+        "公安联网备案",
+        "备案号"
+      ],
+      "lead_time": "5-15 个工作日",
+      "basis": "《计算机信息网络国际联网安全保护管理办法》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.beian.gov.cn/",
+      "confidence": "high",
+      "note": "ICP 备案与公安备案是两条独立流程，只做前者会被检查出来。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "数据合规",
+      "rule": "如果收集手机号、身份证、位置、简历、健康、人脸等个人信息，那么必须有隐私政策 + 收集清单 + 单独同意（敏感信息）+ 最小必要设计，否则属于违法处理个人信息。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "用户",
+        "注册",
+        "登录",
+        "手机号",
+        "实名",
+        "身份证",
+        "定位",
+        "人脸",
+        "简历",
+        "隐私"
+      ],
+      "probe": [
+        "隐私政策",
+        "个人信息",
+        "单独同意",
+        "最小必要"
+      ],
+      "lead_time": "1-2 周（起草+改造埋点与授权流程）",
+      "basis": "《个人信息保护法》（2021-11-01 施行）；《网络数据安全管理条例》（2025-01-01 施行）",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "同意必须是“主动勾选”，预勾选、默认同意、拒绝即不提供服务（非必要信息）都是典型违规点。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "数据合规",
+      "rule": "如果处理敏感个人信息、做自动化决策（算法推荐/定价）、委托处理或对外提供个人信息，那么必须开展个人信息保护影响评估（PIA）并留存记录至少 3 年。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "推荐算法",
+        "用户画像",
+        "大数据",
+        "精准营销",
+        "对外提供",
+        "第三方sdk",
+        "sdk"
+      ],
+      "probe": [
+        "影响评估",
+        "PIA",
+        "评估报告"
+      ],
+      "lead_time": "1-3 周",
+      "basis": "《个人信息保护法》第 55、56 条",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "接入第三方 SDK（统计、推送、支付）即属“对外提供/委托处理”，很多团队漏在这一步。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "网络等级保护",
+      "rule": "如果系统承载用户数据并对外提供服务，那么必须按《网络安全法》完成等级保护定级备案；一般业务系统定为二级，涉大量个人信息或公共服务平台常定为三级，二级以上需测评。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "服务器",
+        "系统",
+        "等保",
+        "安全",
+        "数据",
+        "平台"
+      ],
+      "probe": [
+        "等保",
+        "等级保护",
+        "定级备案",
+        "测评"
+      ],
+      "lead_time": "定级备案 2-4 周；测评 2-6 周（三级每年一次）",
+      "basis": "《网络安全法》第 21 条；GB/T 22239",
+      "basis_level": "law",
+      "verify_url": "https://www.mps.gov.cn/",
+      "confidence": "medium",
+      "note": "测评频次与定级口径各地公安网安要求略有差异，须向属地确认；三级系统改造费用常被低估。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "算法与AI",
+      "rule": "如果提供算法推荐、排序、个性化推送，且具有舆论属性或社会动员能力，那么必须完成算法备案（互联网信息服务算法备案系统）并公示算法基本原理。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "推荐",
+        "算法",
+        "信息流",
+        "智能匹配",
+        "排序",
+        "个性化"
+      ],
+      "probe": [
+        "算法备案",
+        "算法推荐",
+        "备案系统"
+      ],
+      "lead_time": "1-2 个月",
+      "basis": "《互联网信息服务算法推荐管理规定》（2022-03-01 施行）",
+      "basis_level": "rule",
+      "verify_url": "https://beian.cac.gov.cn/",
+      "confidence": "high",
+      "note": "招聘、内容、电商的“智能推荐”都在射程内；“我们只是简单排序”不构成豁免理由。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "知识产权",
+      "rule": "如果项目以品牌名称对外经营，那么必须提前做商标检索并注册（核心类别 + 第 9/35/42 类互联网相关），否则做起来后被抢注只能改名。",
+      "type": "compliance",
+      "severity": "advisory",
+      "trigger": [
+        "品牌",
+        "名字",
+        "商标",
+        "logo",
+        "名称",
+        "小程序名称"
+      ],
+      "probe": [
+        "商标",
+        "注册",
+        "类别"
+      ],
+      "lead_time": "受理 1 个月，注册 6-9 个月",
+      "basis": "《商标法》",
+      "basis_level": "law",
+      "verify_url": "https://sbj.cnipa.gov.cn/",
+      "confidence": "high",
+      "note": "小程序/App 名称被占用往往是因为商标被他人先注册，改名成本远高于注册成本。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "合同与用工",
+      "rule": "如果与他人合作开发、代运营或分成，那么必须签书面协议明确知识产权归属、数据归属、退出与违约，否则成果权属默认归创作者，后续融资尽调直接卡死。",
+      "type": "risk",
+      "severity": "blocker",
+      "trigger": [
+        "外包",
+        "合作",
+        "开发",
+        "分成",
+        "合伙",
+        "股权",
+        "代运营"
+      ],
+      "probe": [
+        "协议",
+        "合同",
+        "知识产权归属",
+        "权属"
+      ],
+      "lead_time": "1-2 周",
+      "basis": "《民法典》合同编；《著作权法》委托作品条款",
+      "basis_level": "law",
+      "verify_url": "https://www.gov.cn/",
+      "confidence": "high",
+      "note": "委托开发未约定权属时，著作权归受托人，出资方只拿到使用权——这是最常见的隐性失血点。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "资金合规",
+      "rule": "如果业务涉及代收代付、平台分账、预付充值，那么必须使用持牌支付机构的商户号与合规分账产品，严禁用个人账户或个人收款码归集营业款。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "收款",
+        "支付",
+        "充值",
+        "预付",
+        "分账",
+        "资金",
+        "钱包",
+        "余额"
+      ],
+      "probe": [
+        "支付",
+        "商户号",
+        "持牌",
+        "分账"
+      ],
+      "lead_time": "商户号 1-3 周（需营业执照+对公账户）",
+      "basis": "《非银行支付机构监督管理条例》（2024-05-01 施行）；《电子商务法》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.pbc.gov.cn/",
+      "confidence": "high",
+      "note": "平台沉淀资金并自行清算，可能构成“二清”，属无证经营支付业务。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "通用",
+      "subdomain": "广告与宣传",
+      "rule": "如果对外宣传产品或服务，那么必须避免“最”“第一”“国家级”“保证”“100%”等绝对化与承诺性用语，软文与直播带货须显著标注“广告”。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "宣传",
+        "广告",
+        "推广",
+        "文案",
+        "海报",
+        "直播",
+        "种草"
+      ],
+      "probe": [
+        "广告法",
+        "绝对化",
+        "广告标识"
+      ],
+      "lead_time": "即时（文案审核）",
+      "basis": "《广告法》第 9 条；《互联网广告管理办法》（2023-05-01 施行）",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "“最”字类违规是职业打假与举报的高频抓手，罚款起点对小微主体也不低。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

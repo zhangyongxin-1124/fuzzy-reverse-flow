@@ -1,0 +1,183 @@
+{
+  "meta": {
+    "domain": "教育培训",
+    "note": "先分类（学科/非学科/职业/成人），再定主管机关，最后才是广告与收费。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "教育培训",
+      "subdomain": "办学资质",
+      "rule": "如果开展面向中小学生的学科类培训（语文、数学、外语、物理、化学、生物、政治、历史、地理），那么必须取得办学许可证并按非营利性机构登记，线上学科类培训须经省级教育部门审批备案。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "培训",
+        "学科",
+        "中小学",
+        "辅导",
+        "课外",
+        "网课"
+      ],
+      "probe": [
+        "办学许可证",
+        "学科类",
+        "审批"
+      ],
+      "lead_time": "3-6 个月（且多地不再新批）",
+      "basis": "《民办教育促进法》；中办国办“双减”意见及配套文件",
+      "basis_level": "policy",
+      "verify_url": "http://www.moe.gov.cn/",
+      "confidence": "high",
+      "note": "学科类线上培训的审批窗口在多数地区实质关闭，若目标是“学科提分”，最现实的合规路径是转为非学科素养或成人职业教育。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "教育培训",
+      "subdomain": "办学资质",
+      "rule": "如果开展非学科类培训（艺术、体育、科技、研学），那么须按属地要求取得文化艺术/体育/科技主管部门的审批或备案，并纳入资金监管。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "艺术",
+        "体育",
+        "编程",
+        "科技",
+        "研学",
+        "素质"
+      ],
+      "probe": [
+        "非学科类",
+        "审批",
+        "备案",
+        "资金监管"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《民办教育促进法》；各地非学科类培训机构设置标准",
+      "basis_level": "regulation",
+      "verify_url": "http://www.moe.gov.cn/",
+      "confidence": "medium",
+      "note": "各地标准差异大（场地面积、师资持证、消防），必须查属地具体设置标准，不能套用外地经验。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "教育培训",
+      "subdomain": "广告宣传",
+      "rule": "如果宣传课程效果，那么严禁对升学、通过考试、取得证书或培训效果作保证性承诺，严禁使用“保过”“押题命中”“名师命题组”等表述，也不得利用受益者名义作推荐。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "广告",
+        "宣传",
+        "保过",
+        "提分",
+        "通过率",
+        "名师",
+        "上岸"
+      ],
+      "probe": [
+        "广告法",
+        "保证性承诺",
+        "第24条"
+      ],
+      "lead_time": "即时（文案审核）",
+      "basis": "《广告法》第 24 条",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "教育广告是职业打假重点区，一条“保过”文案的处罚可能高于单月利润。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "教育培训",
+      "subdomain": "预付费",
+      "rule": "如果收取预付费（课时包、年卡），那么必须纳入资金监管账户、单次收费不超过 3 个月或 60 课时（学科类非学科类口径略有差异），并提供明确的退费规则。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "预付费",
+        "课时包",
+        "年卡",
+        "充值",
+        "退费",
+        "收费"
+      ],
+      "probe": [
+        "资金监管",
+        "3个月",
+        "退费"
+      ],
+      "lead_time": "2-4 周（开户+合同改造）",
+      "basis": "教育部等关于加强校外培训机构预收费监管的通知；《消费者权益保护法实施条例》",
+      "basis_level": "policy",
+      "verify_url": "http://www.moe.gov.cn/",
+      "confidence": "medium",
+      "note": "具体课时/金额上限各省有细则，须按属地执行；预付跑路是刑事风险高发点。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "教育培训",
+      "subdomain": "知识产权",
+      "rule": "如果课程使用他人教材、真题、图片、视频片段，那么必须取得授权或做实质性改写，试题与教材的复制发行属高侵权风险。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "教材",
+        "真题",
+        "讲义",
+        "题库",
+        "版权"
+      ],
+      "probe": [
+        "授权",
+        "著作权",
+        "实质性改写"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《著作权法》第 24 条（合理使用边界）",
+      "basis_level": "law",
+      "verify_url": "https://www.ncac.gov.cn/",
+      "confidence": "high",
+      "note": "“教学使用属合理使用”是误读，营利性培训很难落入合理使用。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "教育培训",
+      "subdomain": "未成年人",
+      "rule": "如果用户含未成年人，那么必须设置未成年人模式、限制使用时长与消费、取得监护人同意，并禁止诱导充值打赏。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "未成年人",
+        "学生",
+        "儿童",
+        "监护人",
+        "青少年"
+      ],
+      "probe": [
+        "未成年人模式",
+        "监护人同意",
+        "时长限制"
+      ],
+      "lead_time": "3-6 周",
+      "basis": "《未成年人网络保护条例》（2024-01-01 施行）；《个人信息保护法》第 31 条",
+      "basis_level": "regulation",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "不满 14 周岁未成年人个人信息属敏感个人信息，须监护人单独同意。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

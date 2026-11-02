@@ -1,0 +1,182 @@
+{
+  "meta": {
+    "domain": "线下活动",
+    "note": "审批看人数，风险看人群。人数、场地性质、是否售票/涉外，决定要跑哪几个部门。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "线下活动",
+      "subdomain": "安全许可",
+      "rule": "如果预计参加人数达到 1000 人以上，那么必须向公安机关申请大型群众性活动安全许可（按人数分级审批），未取得许可不得举办。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "活动",
+        "展会",
+        "市集",
+        "演唱会",
+        "比赛",
+        "人数",
+        "场地"
+      ],
+      "probe": [
+        "安全许可",
+        "公安",
+        "1000人"
+      ],
+      "lead_time": "20-30 个工作日（须提前申请）",
+      "basis": "《大型群众性活动安全管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.mps.gov.cn/",
+      "confidence": "high",
+      "note": "人数接近临界时要在宣传口径上谨慎：一旦实际到场超 1000 人而未审批，责任在主办方。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "线下活动",
+      "subdomain": "演出许可",
+      "rule": "如果活动含营业性演出（售票或商业赞助的文艺表演），那么须由有资质的演出经纪机构承办并向文旅部门备案/审批；涉港澳台或涉外演出须逐级报批。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "演出",
+        "演唱会",
+        "音乐节",
+        "live",
+        "表演",
+        "票"
+      ],
+      "probe": [
+        "营业性演出",
+        "演出经纪",
+        "备案"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《营业性演出管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.mct.gov.cn/",
+      "confidence": "high",
+      "note": "“商场中庭快闪表演”只要属营业性演出同样适用，不能以“不是正式演出”规避。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "线下活动",
+      "subdomain": "场地合规",
+      "rule": "如果使用临时搭建舞台、展台或帐篷，那么场地须具备消防验收合格证明，搭建方案须符合消防技术标准，并配备应急疏散与安保方案。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "舞台",
+        "搭建",
+        "展台",
+        "帐篷",
+        "消防",
+        "疏散",
+        "场地"
+      ],
+      "probe": [
+        "消防验收",
+        "疏散",
+        "安保方案"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《消防法》；《大型群众性活动安全管理条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.mps.gov.cn/",
+      "confidence": "high",
+      "note": "酒店宴会厅常缺“活动类”消防许可，签约前要索取场地方消防批文复印件。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "线下活动",
+      "subdomain": "票务与资金",
+      "rule": "如果售票或收费，那么必须明示退改规则、开具发票，票款不得进入个人账户；使用第三方票务系统需确认其分账与结算合规。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "售票",
+        "票务",
+        "收款",
+        "退票",
+        "发票"
+      ],
+      "probe": [
+        "退改规则",
+        "发票",
+        "商户号"
+      ],
+      "lead_time": "1-2 周",
+      "basis": "《消费者权益保护法》；《非银行支付机构监督管理条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "“票一经售出不退不换”属无效条款，需给合理退票通道。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "线下活动",
+      "subdomain": "人身风险",
+      "rule": "如果活动涉及运动、户外、攀爬、水上等高危环节，那么必须购买公众责任险与参与者意外险，并要求参与者签署风险告知书。",
+      "type": "risk",
+      "severity": "blocker",
+      "trigger": [
+        "户外",
+        "运动",
+        "赛事",
+        "保险",
+        "安全",
+        "受伤"
+      ],
+      "probe": [
+        "公众责任险",
+        "意外险",
+        "风险告知"
+      ],
+      "lead_time": "1-2 周",
+      "basis": "《民法典》第 1198 条（安全保障义务）",
+      "basis_level": "law",
+      "verify_url": "https://www.gov.cn/",
+      "confidence": "high",
+      "note": "“签了免责声明就没事”是误解：故意或重大过失不能免责，保险才是兜底。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "线下活动",
+      "subdomain": "无人机与拍摄",
+      "rule": "如果使用无人机航拍或直播，那么须完成实名登记并在允许空域飞行，敏感区域须事先申请；商业拍摄还需场地与肖像授权。",
+      "type": "compliance",
+      "severity": "advisory",
+      "trigger": [
+        "无人机",
+        "航拍",
+        "直播",
+        "拍摄"
+      ],
+      "probe": [
+        "实名登记",
+        "空域",
+        "申请"
+      ],
+      "lead_time": "3-15 天",
+      "basis": "《无人驾驶航空器飞行管理暂行条例》（2024-01-01 施行）",
+      "basis_level": "regulation",
+      "verify_url": "https://www.caac.gov.cn/",
+      "confidence": "high",
+      "note": "城市核心区多为管制空域，未报备即属违规飞行。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

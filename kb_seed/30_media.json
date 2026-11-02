@@ -1,0 +1,276 @@
+{
+  "meta": {
+    "domain": "内容与短剧",
+    "note": "覆盖微短剧/漫剧/动画短片/短视频IP。核心是“备案分层 + 版权链 + AI标识”三件事。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "内容与短剧",
+      "subdomain": "备案分层",
+      "rule": "如果制作的网络微短剧要在境内平台上线传播，那么必须按投资额分层完成备案：投资额 100 万元以上或属特殊题材/平台首推的“重点微短剧”报国家广电总局备案；30 万–100 万元的“普通微短剧”报省级广电规划备案并做完成片审查；不足 30 万元的“其他微短剧”由播出平台审核并报属地省级广电备案。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "短剧",
+        "微短剧",
+        "漫剧",
+        "剧集",
+        "上线",
+        "平台",
+        "投资额"
+      ],
+      "probe": [
+        "备案",
+        "规划备案",
+        "广电",
+        "投资额"
+      ],
+      "lead_time": "2 周–2 个月（分层不同，重点类更久）",
+      "basis": "广电总局办公厅《关于进一步统筹发展和安全促进网络微短剧行业健康繁荣发展的通知》（2024-06-01 起执行分类分层审核）",
+      "basis_level": "rule",
+      "verify_url": "https://www.nrta.gov.cn/",
+      "confidence": "high",
+      "note": "自 2024-06-01 起，未经审核且备案的微短剧不得上网传播；预算卡在 30 万/100 万两条线上会直接改变审批路径，立项时就要定档。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "上线标识",
+      "rule": "如果微短剧上线，那么必须在片头按格式标注《网络剧片发行许可证》号或节目登记备案号（重点类标注“网微剧审字”，普通/其他类标注“网微剧备字”），无号不得传播、不得引流。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "上线",
+        "片头",
+        "播出",
+        "备案号",
+        "发行许可"
+      ],
+      "probe": [
+        "网微剧审字",
+        "网微剧备字",
+        "片头",
+        "备案号"
+      ],
+      "lead_time": "与上线同步（片头包装阶段）",
+      "basis": "同上通知“白名单”制度条款",
+      "basis_level": "rule",
+      "verify_url": "https://www.nrta.gov.cn/",
+      "confidence": "high",
+      "note": "多平台分发时不得借用他平台备案号，各平台按各自审核版本标注。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "AI生成内容",
+      "rule": "如果内容由 AI 生成或合成（文生图、图生视频、数字人、语音克隆），那么必须同时添加显式标识（画面/片头显著提示）与隐式标识（文件元数据），并不得恶意删除、篡改标识。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "ai",
+        "生成",
+        "数字人",
+        "换脸",
+        "配音",
+        "文生视频",
+        "动画"
+      ],
+      "probe": [
+        "标识",
+        "显式标识",
+        "隐式标识",
+        "元数据"
+      ],
+      "lead_time": "1-2 周（改生成与导出链路）",
+      "basis": "《人工智能生成合成内容标识办法》（2025-09-01 施行）；《互联网信息服务深度合成管理规定》",
+      "basis_level": "rule",
+      "verify_url": "https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm",
+      "confidence": "high",
+      "note": "应用商店上架时会被要求说明是否提供 AI 生成服务并核验标识材料；导出下载的文件也必须带标识。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "著作权",
+      "rule": "如果改编他人小说、漫画、剧本或使用他人角色形象，那么必须取得改编权与信息网络传播权的书面授权，并明确改编范围、期限、地域、是否可转授权。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "小说",
+        "改编",
+        "原著",
+        "ip",
+        "角色",
+        "剧本",
+        "漫画"
+      ],
+      "probe": [
+        "授权",
+        "改编权",
+        "信息网络传播权",
+        "合同"
+      ],
+      "lead_time": "2 周–3 个月（谈授权是最长变量）",
+      "basis": "《著作权法》第 10 条（改编权、信息网络传播权）",
+      "basis_level": "law",
+      "verify_url": "https://www.ncac.gov.cn/",
+      "confidence": "high",
+      "note": "只买“影视改编权”不含“信息网络传播权”时，上线点播仍可能侵权；AI 训练用他人作品同样需要授权或法定许可评估。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "素材版权",
+      "rule": "如果使用背景音乐、音效、字体、实拍素材，那么必须逐项取得商用授权并留存凭证；平台曲库授权通常不覆盖第三方平台分发与商业广告。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "音乐",
+        "bgm",
+        "字体",
+        "素材",
+        "音效",
+        "配乐"
+      ],
+      "probe": [
+        "商用授权",
+        "版权凭证",
+        "字体授权"
+      ],
+      "lead_time": "3 天–2 周",
+      "basis": "《著作权法》；各素材平台授权协议",
+      "basis_level": "law",
+      "verify_url": "https://www.ncac.gov.cn/",
+      "confidence": "high",
+      "note": "字体侵权索赔是内容行业最典型的“小额高频”诉讼，商用前必须核验授权范围（是否含网络传播、是否限播放量）。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "人格权",
+      "rule": "如果内容使用真人肖像、姓名、声音（含 AI 合成声音），那么必须取得本人书面同意；AI 合成他人形象/声音即使非贬损也可能构成侵权。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "肖像",
+        "演员",
+        "真人",
+        "声音",
+        "数字人",
+        "代言"
+      ],
+      "probe": [
+        "肖像权",
+        "书面同意",
+        "授权"
+      ],
+      "lead_time": "1-2 周",
+      "basis": "《民法典》人格权编第 1018-1023 条",
+      "basis_level": "law",
+      "verify_url": "https://www.gov.cn/",
+      "confidence": "high",
+      "note": "合同里必须写明使用范围（平台、期限、是否可用于 AI 训练），否则二次复用即违约。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "内容红线",
+      "rule": "如果内容涉及低俗擦边、暴力犯罪细节、封建迷信、诱导付费、未成年人不良引导，那么平台审核必驳回，且可能触发行政处罚；擦边是最常见的“拍完不能播”死因。",
+      "type": "risk",
+      "severity": "redline",
+      "trigger": [
+        "剧情",
+        "擦边",
+        "低俗",
+        "暴力",
+        "审核不通过",
+        "驳回"
+      ],
+      "probe": [
+        "内容审核",
+        "红线",
+        "备案驳回"
+      ],
+      "lead_time": "剧本阶段即审（前置自查）",
+      "basis": "《网络信息内容生态治理规定》；平台内容审核规范",
+      "basis_level": "rule",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "剧本阶段做一次“红线自查”成本几乎为零，成片后重拍成本是全部。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "资质",
+      "rule": "如果以机构身份制作并发行网络视听节目，那么通常需要《广播电视节目制作经营许可证》；若涉及营业性演出（线下演出、粉丝见面会）另需演出许可。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "制作",
+        "发行",
+        "机构",
+        "公司",
+        "演出",
+        "经纪"
+      ],
+      "probe": [
+        "广播电视节目制作经营许可",
+        "演出许可"
+      ],
+      "lead_time": "1-2 个月",
+      "basis": "《广播电视管理条例》；《营业性演出管理条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.nrta.gov.cn/",
+      "confidence": "medium",
+      "note": "个人创作者依托平台备案通常不必单独取证；一旦以公司名义承接品牌定制或发行，属地广电多会要求该证，须向属地确认。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "内容与短剧",
+      "subdomain": "商业变现",
+      "rule": "如果内容含品牌植入、带货或付费解锁，那么必须显著标注广告属性，并明示价格与退款规则；付费短剧不得以“免费试看”诱导后自动续费。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "植入",
+        "带货",
+        "付费",
+        "解锁",
+        "充值",
+        "广告",
+        "续费"
+      ],
+      "probe": [
+        "广告标识",
+        "自动续费",
+        "明码标价"
+      ],
+      "lead_time": "产品与片头同步",
+      "basis": "《互联网广告管理办法》；《消费者权益保护法实施条例》",
+      "basis_level": "rule",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "自动续费需显著提示、提供便捷取消入口，否则属典型违规。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "meta": {
+    "domain": "招聘与人力",
+    "note": "红线密度最高的领域之一：许可 + 平台账号核验 + 不得向劳动者收费 + 简历个人信息。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "招聘与人力",
+      "subdomain": "许可资质",
+      "rule": "如果从事职业中介活动（为用人单位推荐劳动者、为劳动者介绍用人单位、组织招聘会、网络招聘、猎头），那么必须在市场主体登记后向住所地人社部门申请《人力资源服务许可证》，经营范围须载明“职业中介”。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "招聘",
+        "求职",
+        "中介",
+        "猎头",
+        "零工",
+        "人力资源",
+        "找工作"
+      ],
+      "probe": [
+        "人力资源服务许可证",
+        "职业中介",
+        "经营范围"
+      ],
+      "lead_time": "20-30 个工作日（各地告知承诺制可缩短）",
+      "basis": "《人力资源市场暂行条例》（国务院令第700号）；《人力资源服务机构管理规定》（人社部令第50号）",
+      "basis_level": "regulation",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "常见门槛：3 名以上专职工作人员、固定场所、章程与管理制度。免费公益性质的纯信息展示可另行判断，但一旦收费或成交导向，即视为经营性。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "许可资质",
+      "rule": "如果通过网络（网站、App、小程序、直播）提供招聘服务并属于经营电信业务，那么除人力资源服务许可证外，还须取得电信业务经营许可证（ICP 经营许可）。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "网络招聘",
+        "招聘平台",
+        "小程序",
+        "app",
+        "直播招聘"
+      ],
+      "probe": [
+        "电信业务经营许可",
+        "ICP",
+        "增值电信"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《网络招聘服务管理规定》（人社部令第44号）第 9 条",
+      "basis_level": "rule",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "“双证”是招聘平台的真实门槛，只办其中一个就收费发布职位，属超范围经营。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "平台责任",
+      "rule": "如果平台为用人单位提供招聘信息发布服务，那么必须对招聘类账号分类核验资质（经营性招聘/公共招聘/用人单位自主招聘）、登记建档、每 6 个月至少复核一次，未通过认证的账号禁止发布招聘信息。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "平台",
+        "发布职位",
+        "企业认证",
+        "账号",
+        "入驻",
+        "招聘信息"
+      ],
+      "probe": [
+        "资质核验",
+        "认证",
+        "6个月",
+        "建档"
+      ],
+      "lead_time": "2-4 周（产品化审核后台+人工流程）",
+      "basis": "人社部等 5 部门《关于规范网络平台招聘类信息发布的通知》（人社厅发〔2025〕60号）",
+      "basis_level": "rule",
+      "verify_url": "https://www.mohrss.gov.cn/SYrlzyhshbzb/jiuye/zcwj/renliziyuanshichang/202601/t20260113_565364.html",
+      "confidence": "high",
+      "note": "该通知还要求：主页显著位置持续公示营业执照与许可证、设“招聘服务类”标签、信息变更 10 个工作日内更新。这套要求几乎等于一份产品需求文档。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "信息规范",
+      "rule": "如果发布招聘信息，那么必须包含用人单位基本情况、招聘人数、条件、工作内容、地点、基本劳动报酬，并标注有效期；缺“劳动报酬”即属不合规信息。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "职位",
+        "岗位",
+        "薪资",
+        "招聘信息",
+        "发布"
+      ],
+      "probe": [
+        "劳动报酬",
+        "有效期",
+        "信息规范"
+      ],
+      "lead_time": "1 周（表单字段与校验）",
+      "basis": "人社厅发〔2025〕60号 第五条",
+      "basis_level": "rule",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "“薪资面议”“待遇从优”在中老年/蓝领场景里会显著降低转化，也踩规范要求，直接写区间更好卖。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "劳动者权益",
+      "rule": "如果涉及用工撮合，那么严禁向劳动者收取押金、保证金、培训费、服装费，或扣押身份证等证件；不得以招聘为名收取费用。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "押金",
+        "收费",
+        "培训费",
+        "保证金",
+        "身份证",
+        "入职"
+      ],
+      "probe": [
+        "禁止收费",
+        "押金",
+        "扣押证件"
+      ],
+      "lead_time": "产品规则即时生效",
+      "basis": "《劳动合同法》第 9 条；《人力资源市场暂行条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "面向中老年群体时，“收费才能安排工作”是最容易出事的设计，务必在产品层面禁止，而非靠运营口头约束。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "个人信息",
+      "rule": "如果收集简历、身份证、健康证、银行卡，那么属处理敏感个人信息，必须单独同意 + 加密存储 + 最小必要 + 明示保存期限，且不得未经同意向第三方（含用工单位）提供完整身份信息。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "简历",
+        "身份证",
+        "实名",
+        "健康证",
+        "银行卡",
+        "个人信息"
+      ],
+      "probe": [
+        "单独同意",
+        "敏感个人信息",
+        "加密",
+        "最小必要"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《个人信息保护法》第 28-29 条",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "简历含身份信息与联系方式，属“可识别特定自然人”的高价值数据，泄露即为重大事件；面向中老年用户还需额外的“易读告知”。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "就业歧视",
+      "rule": "如果设置招聘筛选条件（年龄、性别、户籍、婚育、健康），那么不得构成就业歧视；“限 40 岁以下”“限男性”等表述属违法风险，且平台会被要求整改下架。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "年龄",
+        "性别",
+        "户籍",
+        "歧视",
+        "筛选",
+        "要求"
+      ],
+      "probe": [
+        "就业歧视",
+        "平等就业",
+        "筛选条件"
+      ],
+      "lead_time": "1 周（字段与审核规则）",
+      "basis": "《就业促进法》第 3、27、29 条",
+      "basis_level": "law",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "做“40+ 再就业”产品时尤其要注意：可以面向该人群做服务，但不能在职位要求里写年龄上限排斥他人。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "劳务派遣",
+      "rule": "如果涉及劳务派遣（用人单位与劳动者建立劳动关系后派至用工单位），那么必须取得《劳务派遣经营许可证》，注册资本不低于 200 万元，且仅限临时性、辅助性、替代性岗位。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "派遣",
+        "驻场",
+        "外包用工",
+        "劳动关系",
+        "代发工资"
+      ],
+      "probe": [
+        "劳务派遣",
+        "200万",
+        "三性岗位"
+      ],
+      "lead_time": "1-2 个月",
+      "basis": "《劳动合同法》第 57 条；《劳务派遣行政许可实施办法》",
+      "basis_level": "law",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "把“派遣”写成“合作/外包”不能改变实质认定，一旦被认定为事实劳动关系，责任回到平台。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "平台连带",
+      "rule": "如果平台未核验用人单位真实性，导致虚假招聘、骗取费用或人身伤害，那么平台可能被行政处罚并承担民事赔偿，严重时负责人被追责。",
+      "type": "risk",
+      "severity": "redline",
+      "trigger": [
+        "虚假招聘",
+        "诈骗",
+        "投诉",
+        "纠纷",
+        "赔偿",
+        "黑中介"
+      ],
+      "probe": [
+        "核验",
+        "投诉处置",
+        "赔付机制"
+      ],
+      "lead_time": "持续运营（需客服与处置 SOP）",
+      "basis": "《网络招聘服务管理规定》；《民法典》第 1197 条（网络服务提供者责任）",
+      "basis_level": "law",
+      "verify_url": "https://www.mohrss.gov.cn/",
+      "confidence": "high",
+      "note": "蓝领/中老年场景下“黑中介收费”是最大舆情源，需有保证金/赔付金与快速下架机制。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "招聘与人力",
+      "subdomain": "资源前提",
+      "rule": "如果要做招聘平台冷启动，那么在开发前必须先拿到 30-50 个真实岗位（含薪资、地点、联系人）与 3-5 家愿意配合面试的企业，否则双边市场无法启动。",
+      "type": "resource",
+      "severity": "blocker",
+      "trigger": [
+        "冷启动",
+        "岗位",
+        "企业",
+        "双边",
+        "供给",
+        "求职者"
+      ],
+      "probe": [
+        "真实岗位",
+        "企业合作",
+        "供给"
+      ],
+      "lead_time": "3-6 周（地推+老关系）",
+      "basis": "行业实践（非监管要求）",
+      "basis_level": "practice",
+      "verify_url": "",
+      "confidence": "medium",
+      "note": "招聘平台的死亡顺序：无岗位 → 求职者流失 → 无简历 → 企业不来。必须先做单边（岗位）再拉另一边。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

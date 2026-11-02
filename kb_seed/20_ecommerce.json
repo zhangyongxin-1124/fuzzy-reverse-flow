@@ -1,0 +1,305 @@
+{
+  "meta": {
+    "domain": "电商平台",
+    "note": "判定标准：是否存在“多个卖方”与“在线成交”两个特征。只有其一，门槛不同（见 note 字段）。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "电商平台",
+      "subdomain": "许可资质",
+      "rule": "如果平台含多商户入驻并提供在线交易处理（下单、撮合、结算），那么必须同时持有 ICP 经营许可证（B25 信息服务业务）与 EDI 许可证（B21 在线数据处理与交易处理业务），仅有 ICP 备案不够。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "电商",
+        "多商户",
+        "入驻",
+        "在线交易",
+        "商城",
+        "平台"
+      ],
+      "probe": [
+        "ICP",
+        "EDI",
+        "经营许可",
+        "增值电信"
+      ],
+      "lead_time": "1-3 个月（省级通信管理局受理，社保/人员/场地需满足属地要求）",
+      "basis": "《电信业务分类目录》B21/B25；《互联网信息服务管理办法》",
+      "basis_level": "rule",
+      "verify_url": "https://www.miit.gov.cn/",
+      "confidence": "high",
+      "note": "单商户自营网店（只卖自己的货）通常只需 ICP 备案 + 经营性场景下的 ICP 许可评估，不必上 EDI；一旦放开第三方入驻，EDI 基本无法回避。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "平台责任",
+      "rule": "如果平台允许第三方商家入驻，那么必须履行入驻主体身份核验、登记建档、信息公示（营业执照/许可证），并保存核验记录；未尽义务导致消费者受损，平台可能承担连带责任。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "入驻",
+        "商家",
+        "第三方",
+        "多商户",
+        "店铺",
+        "平台"
+      ],
+      "probe": [
+        "核验",
+        "登记",
+        "公示",
+        "营业执照",
+        "连带"
+      ],
+      "lead_time": "与开发同步（需产品化审核流程与后台留存）",
+      "basis": "《电子商务法》第 27、38 条；《网络交易监督管理办法》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "“知道或应当知道”侵权未采取措施即担责；实践中最致命的是没有留痕（审核记录、处置记录）。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "资金合规",
+      "rule": "如果平台代收货款再结算给商家，那么必须通过持牌支付机构的合规分账产品实现，平台不得自行归集资金形成资金池。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "结算",
+        "分账",
+        "代收",
+        "货款",
+        "资金池",
+        "提现"
+      ],
+      "probe": [
+        "分账",
+        "持牌支付",
+        "资金池",
+        "二清"
+      ],
+      "lead_time": "2-6 周（支付机构尽调+技术对接）",
+      "basis": "《非银行支付机构监督管理条例》；央行关于“二清”的监管口径",
+      "basis_level": "regulation",
+      "verify_url": "https://www.pbc.gov.cn/",
+      "confidence": "high",
+      "note": "“二清”是电商平台最常见的刑事/行政风险来源，早期用个人账户过渡属高危操作。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "消费者权益",
+      "rule": "如果销售实物商品，那么必须支持 7 日无理由退货（法定除外品类需明示），并提供发票；预售、定金、价保规则须在购买页显著说明。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "退货",
+        "售后",
+        "退款",
+        "发票",
+        "预售",
+        "消费者"
+      ],
+      "probe": [
+        "7日无理由",
+        "退货",
+        "发票",
+        "售后"
+      ],
+      "lead_time": "产品设计阶段即固化",
+      "basis": "《消费者权益保护法》第 25 条；《网络交易监督管理办法》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "“定制商品不退”必须在购买前单独确认，默认勾选不算。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "价格与促销",
+      "rule": "如果开展促销（划线价、限时折扣、满减），那么必须保证原价真实可查、规则清晰，先涨后降属价格欺诈。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "促销",
+        "折扣",
+        "原价",
+        "满减",
+        "618",
+        "双11",
+        "价格"
+      ],
+      "probe": [
+        "明码标价",
+        "原价",
+        "价格欺诈"
+      ],
+      "lead_time": "即时（需价格历史留痕）",
+      "basis": "《价格法》；《明码标价和禁止价格欺诈规定》",
+      "basis_level": "rule",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "大促前调价再打折是被集中举报的点，需保留 30 天价格记录自证。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "税务",
+      "rule": "如果平台向商家结算货款或收取佣金，那么必须依法开具发票并履行代扣代缴/涉税信息报送义务，平台内经营者的税务身份需在入驻时采集。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "佣金",
+        "结算",
+        "发票",
+        "税",
+        "入驻",
+        "个体户"
+      ],
+      "probe": [
+        "发票",
+        "税务",
+        "涉税信息"
+      ],
+      "lead_time": "1-2 周（财务流程+系统字段）",
+      "basis": "《电子商务法》第 28 条；《税收征收管理法》",
+      "basis_level": "law",
+      "verify_url": "https://www.chinatax.gov.cn/",
+      "confidence": "high",
+      "note": "“平台不碰钱就不用管税”是错误认知，佣金与服务费本身就是应税收入。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "特殊品类",
+      "rule": "如果平台销售食品、化妆品、医疗器械、酒类等特殊品类，那么平台须核验商家的专项许可证（如食品经营许可证），并建立品类准入清单。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "食品",
+        "化妆品",
+        "保健品",
+        "医疗器械",
+        "酒",
+        "品类",
+        "类目"
+      ],
+      "probe": [
+        "食品经营许可",
+        "类目资质",
+        "准入"
+      ],
+      "lead_time": "2-4 周（类目报备+商家补证）",
+      "basis": "《食品安全法》第 62 条；《医疗器械监督管理条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "超类目经营是平台被处罚的高频原因，也是小程序审核驳回的主因之一。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "知识产权",
+      "rule": "如果平台允许商家上传商品图文，那么必须建立侵权投诉通道与“通知—删除”处置机制，并对重复侵权商家采取必要措施。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "侵权",
+        "投诉",
+        "盗图",
+        "品牌",
+        "知识产权",
+        "假货"
+      ],
+      "probe": [
+        "通知删除",
+        "投诉通道",
+        "知识产权"
+      ],
+      "lead_time": "2-3 周",
+      "basis": "《电子商务法》第 41-45 条；《信息网络传播权保护条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.cnipa.gov.cn/",
+      "confidence": "high",
+      "note": "没有投诉入口，平台就从“中立通道”变成“共同侵权方”。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "资源前提",
+      "rule": "如果要做冷启动，那么在开发完成前必须先锁定 10-30 个种子商家并取得其真实商品与价格授权，否则上线即空城。",
+      "type": "resource",
+      "severity": "blocker",
+      "trigger": [
+        "冷启动",
+        "商家",
+        "招商",
+        "种子",
+        "供给"
+      ],
+      "probe": [
+        "种子商家",
+        "招商",
+        "供给"
+      ],
+      "lead_time": "4-8 周（与开发并行）",
+      "basis": "行业实践（非监管要求）",
+      "basis_level": "practice",
+      "verify_url": "",
+      "confidence": "medium",
+      "note": "电商死亡顺序通常是：没供给 → 没成交 → 没复购 → 补贴停即死。技术从来不是第一死因。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "电商平台",
+      "subdomain": "致命风险",
+      "rule": "如果平台存在假冒伪劣且平台未采取必要措施，那么可能承担连带责任并面临行政处罚，严重时影响支付通道与上架资格。",
+      "type": "risk",
+      "severity": "redline",
+      "trigger": [
+        "假货",
+        "假冒",
+        "质量",
+        "抽检",
+        "处罚",
+        "连带"
+      ],
+      "probe": [
+        "抽检",
+        "连带责任",
+        "处置"
+      ],
+      "lead_time": "持续（需常态抽检与黑名单机制）",
+      "basis": "《电子商务法》第 38 条；《产品质量法》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "支付机构与云服务商的风控会因处罚记录直接关停通道，属于“二次死亡”。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

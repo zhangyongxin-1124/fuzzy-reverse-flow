@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "domain": "餐饮食品",
+    "note": "证照三件套：营业执照 → 食品经营许可证（载明网络经营）→ 从业人员健康证。缺一即不能上线外卖。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "餐饮食品",
+      "subdomain": "许可资质",
+      "rule": "如果从事餐饮服务或销售食品，那么必须先取得《食品经营许可证》（或小餐饮登记/小作坊许可，按属地），且许可证上须载明“网络经营”才能上线外卖平台。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "餐饮",
+        "外卖",
+        "食品",
+        "开店",
+        "厨房",
+        "奶茶"
+      ],
+      "probe": [
+        "食品经营许可证",
+        "网络经营"
+      ],
+      "lead_time": "15-30 个工作日（现场核查）",
+      "basis": "《食品安全法》第 35 条；《网络餐饮服务食品安全监督管理办法》",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "厨房选址阶段就要确认该地址能否办证（是否为民宅、是否有油烟排放条件），否则装修完无法办证。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "餐饮食品",
+      "subdomain": "人员",
+      "rule": "如果接触直接入口食品，那么从业人员必须持有效健康证明上岗，并每年体检。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "员工",
+        "厨师",
+        "服务员",
+        "健康证",
+        "招聘"
+      ],
+      "probe": [
+        "健康证",
+        "体检"
+      ],
+      "lead_time": "3-7 天",
+      "basis": "《食品安全法》第 45 条",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "外卖平台抽查会直接要求上传，缺证即下线。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "餐饮食品",
+      "subdomain": "平台责任",
+      "rule": "如果自建外卖小程序或平台，那么必须履行商家许可证核验、公示（许可证与量化分级）、订单留存不少于 6 个月，并配备食品安全管理人员。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "小程序",
+        "外卖平台",
+        "点单",
+        "自营",
+        "商家"
+      ],
+      "probe": [
+        "许可证公示",
+        "留存",
+        "食品安全管理"
+      ],
+      "lead_time": "2-4 周",
+      "basis": "《网络餐饮服务食品安全监督管理办法》第 6-9 条",
+      "basis_level": "rule",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "自营点单小程序看似简单，一旦涉及多个商家入驻即变成“平台”，义务立刻加重。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "餐饮食品",
+      "subdomain": "环保消防",
+      "rule": "如果设立餐饮后厨，那么必须通过油烟净化与排污（排水许可/隔油池）、消防验收或备案，居民楼下开设餐饮常因油烟被投诉关停。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "后厨",
+        "油烟",
+        "排污",
+        "消防",
+        "选址",
+        "装修"
+      ],
+      "probe": [
+        "油烟",
+        "消防",
+        "排水",
+        "选址"
+      ],
+      "lead_time": "1-3 个月（与装修同步）",
+      "basis": "《大气污染防治法》第 81 条；《消防法》",
+      "basis_level": "law",
+      "verify_url": "https://www.mee.gov.cn/",
+      "confidence": "high",
+      "note": "选址决定 60% 的合规成本：没有专用烟道的楼宇，后续几乎无法补救。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "餐饮食品",
+      "subdomain": "宣传",
+      "rule": "如果宣传食品功效（养生、减肥、治疗），那么属违法宣传；普通食品不得宣称保健或治疗功能，保健食品需蓝帽子标识与批准文号。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "养生",
+        "减肥",
+        "功效",
+        "保健",
+        "纯天然",
+        "宣传"
+      ],
+      "probe": [
+        "功效宣称",
+        "保健食品",
+        "批准文号"
+      ],
+      "lead_time": "即时（文案审核）",
+      "basis": "《食品安全法》第 73 条；《广告法》第 17 条",
+      "basis_level": "law",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "“0 添加”“纯天然”等表述也受严格限制，菜单与包装文案需一并审核。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

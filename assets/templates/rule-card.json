@@ -1,0 +1,15 @@
+{
+  "domain": "电商平台",
+  "subdomain": "许可资质",
+  "rule": "如果平台含多商户入驻并提供在线交易处理，那么必须同时取得 ICP 经营许可证（B25）与 EDI 许可证（B21），否则属无证经营。",
+  "type": "compliance",
+  "severity": "redline",
+  "trigger": ["电商", "多商户", "入驻", "在线交易"],
+  "probe": ["ICP", "EDI", "经营许可"],
+  "lead_time": "1-3 个月",
+  "basis": "《电信业务分类目录》B21/B25",
+  "basis_level": "rule",
+  "verify_url": "https://www.miit.gov.cn/",
+  "confidence": "high",
+  "note": "单商户自营通常只需 ICP 备案；一旦开放第三方入驻，EDI 基本无法回避。"
+}

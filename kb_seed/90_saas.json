@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "domain": "软件与小程序",
+    "note": "软件类项目的隐性成本集中在“证照+测评+许可审计”三项，且都在开发完成后才被发现。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "软件与小程序",
+      "subdomain": "知识产权",
+      "rule": "如果要把软件/小程序作为资产（融资、上架、维权、政府补贴），那么应尽早办理计算机软件著作权登记，并保留源代码版本记录与开发过程证据。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "软著",
+        "著作权",
+        "上架",
+        "融资",
+        "代码"
+      ],
+      "probe": [
+        "软件著作权",
+        "登记",
+        "源代码"
+      ],
+      "lead_time": "普件 30-60 个工作日；加急 3-15 个工作日",
+      "basis": "《计算机软件保护条例》",
+      "basis_level": "regulation",
+      "verify_url": "https://www.ccopyright.com.cn/",
+      "confidence": "high",
+      "note": "应用商店、高新认定、政府项目申报普遍要求软著，临时补办会卡住上线或申报节点。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "软件与小程序",
+      "subdomain": "开源合规",
+      "rule": "如果产品使用开源组件，那么必须做许可证审计：GPL/AGPL 具传染性（AGPL 连网络服务也触发），商用闭源产品应避免或隔离；并保留组件清单与许可证文本。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "开源",
+        "gpl",
+        "agpl",
+        "组件",
+        "依赖",
+        "框架",
+        "license"
+      ],
+      "probe": [
+        "许可证审计",
+        "GPL",
+        "AGPL",
+        "组件清单"
+      ],
+      "lead_time": "3-10 天（工具扫描+人工确认）",
+      "basis": "各开源许可证条款（GPL-3.0/AGPL-3.0/Apache-2.0/MIT 等）",
+      "basis_level": "license",
+      "verify_url": "https://opensource.org/licenses",
+      "confidence": "high",
+      "note": "“开源=免费商用”是常见误解：MIT/Apache 可商用但须保留版权声明，AGPL 要求提供源码给网络用户。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "软件与小程序",
+      "subdomain": "上架审核",
+      "rule": "如果 App/小程序上架，那么必须通过隐私合规检测：提供隐私政策、收集清单、权限说明、SDK 清单，且不得在用户同意前收集信息、不得强制索权。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "上架",
+        "审核驳回",
+        "隐私",
+        "权限",
+        "sdk",
+        "小程序"
+      ],
+      "probe": [
+        "隐私政策",
+        "SDK清单",
+        "权限说明",
+        "同意前不收集"
+      ],
+      "lead_time": "1-3 周（整改+复测）",
+      "basis": "《移动互联网应用程序信息服务管理规定》；工信部 App 侵害用户权益专项整治要求；各平台审核规范",
+      "basis_level": "rule",
+      "verify_url": "https://www.miit.gov.cn/",
+      "confidence": "high",
+      "note": "“首次启动就弹权限”“不同意隐私政策就退出（非必要信息）”是驳回率最高的两项。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "软件与小程序",
+      "subdomain": "第三方服务",
+      "rule": "如果接入第三方 SDK（推送、统计、地图、支付、人脸），那么必须逐一核验其合规性与数据流向，并在隐私政策中披露接收方名称、目的、信息类型。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "sdk",
+        "第三方",
+        "推送",
+        "统计",
+        "地图",
+        "人脸识别"
+      ],
+      "probe": [
+        "SDK清单",
+        "数据流向",
+        "披露"
+      ],
+      "lead_time": "1-2 周",
+      "basis": "《个人信息保护法》第 23 条；App 合规检测规范",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "“共享给第三方”需单独同意；很多 SDK 默认采集 IMEI/OAID，属超范围收集。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "软件与小程序",
+      "subdomain": "经营性判定",
+      "rule": "如果小程序/网站存在会员付费、广告变现、交易抽佣、付费内容，那么属经营性互联网信息服务，需评估办理 ICP 经营许可证，而非仅备案。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "会员",
+        "付费",
+        "广告",
+        "抽佣",
+        "变现",
+        "收费"
+      ],
+      "probe": [
+        "ICP经营许可",
+        "经营性",
+        "增值电信"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《互联网信息服务管理办法》第 3-4 条",
+      "basis_level": "regulation",
+      "verify_url": "https://www.miit.gov.cn/",
+      "confidence": "medium",
+      "note": "各地对“经营性”的执法尺度不同（有的看是否有付费功能，有的看是否实际收费），建议向属地通管局书面咨询并留痕。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "软件与小程序",
+      "subdomain": "数据安全",
+      "rule": "如果系统存储超过 10 万人个人信息或属关键信息基础设施相关，那么须指定个人信息保护负责人、定期开展合规审计，并履行更严格的安全义务。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "用户量",
+        "十万",
+        "数据量",
+        "个人信息",
+        "审计"
+      ],
+      "probe": [
+        "保护负责人",
+        "合规审计",
+        "数量门槛"
+      ],
+      "lead_time": "1-2 个月",
+      "basis": "《个人信息保护法》第 52、54、58 条；《网络数据安全管理条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "用户量跨过门槛后义务会跳档，产品设计阶段就要预留合规预算。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

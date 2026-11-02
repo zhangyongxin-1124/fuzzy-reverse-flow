@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "domain": "医疗健康",
+    "note": "本领域“资质”只是入场券，真正的红线是诊疗行为边界。信息（科普）与诊疗（诊断处方）是两种完全不同的法律地位。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "医疗健康",
+      "subdomain": "诊疗资质",
+      "rule": "如果提供互联网诊疗（问诊、开方、诊断），那么必须依托实体医疗机构、取得《医疗机构执业许可证》并以“互联网医院”作为第二名称，医师须在本机构注册；不得对首诊患者开展互联网诊疗。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "问诊",
+        "诊疗",
+        "开方",
+        "处方",
+        "医生",
+        "在线咨询",
+        "互联网医院"
+      ],
+      "probe": [
+        "医疗机构执业许可证",
+        "互联网医院",
+        "首诊"
+      ],
+      "lead_time": "3-6 个月（含实体机构依托与系统对接监管平台）",
+      "basis": "《互联网诊疗管理办法（试行）》《互联网医院管理办法（试行）》（2018）",
+      "basis_level": "rule",
+      "verify_url": "http://www.nhc.gov.cn/",
+      "confidence": "high",
+      "note": "没有实体机构依托，任何“在线看病开药”的形态都不成立；AI 只能做辅助，不得替代医师作出诊断结论。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "医疗健康",
+      "subdomain": "信息服务",
+      "rule": "如果提供药品/医疗器械信息或交易服务，那么须取得《互联网药品信息服务资格证书》（信息服务）或对应的《药品经营许可证》《医疗器械经营许可/备案》（交易），且处方药网售受限。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "药品",
+        "器械",
+        "卖药",
+        "处方药",
+        "保健品",
+        "药店"
+      ],
+      "probe": [
+        "互联网药品信息服务资格",
+        "药品经营许可",
+        "医疗器械"
+      ],
+      "lead_time": "2-4 个月",
+      "basis": "《互联网药品信息服务管理办法》；《药品网络销售监督管理办法》（2022-12-01 施行）",
+      "basis_level": "rule",
+      "verify_url": "https://www.nmpa.gov.cn/",
+      "confidence": "high",
+      "note": "疫苗、血液制品、麻醉药品、精神药品等禁止网络销售；处方药网售须实名、凭方、审方。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "医疗健康",
+      "subdomain": "内容边界",
+      "rule": "如果做健康科普内容，那么必须避免给出个体化诊断结论或用药建议，且需标注“不能替代面诊”；以科普之名行导诊带货之实，会被认定为医疗广告或非法行医。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "科普",
+        "健康内容",
+        "养生",
+        "调理",
+        "症状",
+        "建议用药"
+      ],
+      "probe": [
+        "科普",
+        "不能替代",
+        "医疗广告"
+      ],
+      "lead_time": "1-2 周（内容审核 SOP）",
+      "basis": "《广告法》第 16-17 条；《互联网诊疗监管细则》",
+      "basis_level": "law",
+      "verify_url": "http://www.nhc.gov.cn/",
+      "confidence": "high",
+      "note": "“三甲医生在线解答”若涉及具体病症判断，即从科普越界到诊疗。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "医疗健康",
+      "subdomain": "医疗广告",
+      "rule": "如果发布医疗、药品、医疗器械广告，那么必须事先取得《医疗广告审查证明》，且不得含有功效断言、治愈率、有效率、患者名义证明。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "广告",
+        "疗效",
+        "治愈",
+        "患者案例",
+        "医美",
+        "推广"
+      ],
+      "probe": [
+        "医疗广告审查证明",
+        "功效断言",
+        "治愈率"
+      ],
+      "lead_time": "1-2 个月",
+      "basis": "《广告法》第 46 条；《医疗广告管理办法》",
+      "basis_level": "rule",
+      "verify_url": "https://www.samr.gov.cn/",
+      "confidence": "high",
+      "note": "医美与口腔是广告违规高发区，“前后对比图 + 患者证言”基本必罚。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "医疗健康",
+      "subdomain": "数据合规",
+      "rule": "如果处理健康医疗数据（病历、检验、基因、可穿戴设备数据），那么属敏感个人信息，须单独同意、去标识化、境内存储，涉及重要数据的出境须申报安全评估。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "病历",
+        "健康数据",
+        "体检报告",
+        "基因",
+        "手环",
+        "数据出境"
+      ],
+      "probe": [
+        "敏感个人信息",
+        "去标识化",
+        "出境",
+        "安全评估"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《个人信息保护法》第 28-29、38-40 条；《人类遗传资源管理条例》",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "健康数据是监管最敏感的一类，云服务选型时要确认数据驻留地与加密方案。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "医疗健康",
+      "subdomain": "致命风险",
+      "rule": "如果无证从事诊疗或销售处方药，那么可能构成非法行医罪或非法经营罪，不以“只是平台”“只是咨询”而免责。",
+      "type": "risk",
+      "severity": "redline",
+      "trigger": [
+        "无证",
+        "非法行医",
+        "刑事",
+        "处罚",
+        "药品销售"
+      ],
+      "probe": [
+        "非法行医",
+        "非法经营",
+        "刑事"
+      ],
+      "lead_time": "不可补救（事前规避唯一解）",
+      "basis": "《刑法》第 336 条；《基本医疗卫生与健康促进法》第 99 条",
+      "basis_level": "law",
+      "verify_url": "https://www.npc.gov.cn/",
+      "confidence": "high",
+      "note": "这是本领域唯一“不做事前合规就没有事后补救”的红线，任何商业模型必须先把诊疗行为摘出去。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}

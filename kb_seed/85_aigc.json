@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "domain": "AI生成服务",
+    "note": "分水岭在“是否面向境内公众提供”。对内自用与对外服务的义务量差一个数量级。",
+    "last_review": "2026-11"
+  },
+  "rules": [
+    {
+      "domain": "AI生成服务",
+      "subdomain": "备案评估",
+      "rule": "如果面向境内公众提供生成式人工智能服务（对话、写作、绘画、视频生成），且具有舆论属性或社会动员能力，那么必须履行算法备案与安全评估，并在显著位置公示服务提供者信息。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "大模型",
+        "ai",
+        "生成",
+        "对话",
+        "文生图",
+        "文生视频",
+        "智能体"
+      ],
+      "probe": [
+        "算法备案",
+        "安全评估",
+        "生成式人工智能"
+      ],
+      "lead_time": "1-3 个月",
+      "basis": "《生成式人工智能服务管理暂行办法》（2023-08-15 施行）；《互联网信息服务算法推荐管理规定》",
+      "basis_level": "rule",
+      "verify_url": "https://beian.cac.gov.cn/",
+      "confidence": "high",
+      "note": "调用第三方已备案模型做套壳，若以自有品牌对外提供服务，仍可能被认定为服务提供者；接入与再分发条款要在合同里写清。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "AI生成服务",
+      "subdomain": "内容标识",
+      "rule": "如果输出图片、音频、视频、虚拟场景，那么必须添加显式标识（画面/起始画面显著提示）与隐式标识（文件元数据），导出与下载的文件同样要带标识。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "生成图片",
+        "生成视频",
+        "配音",
+        "数字人",
+        "导出",
+        "下载"
+      ],
+      "probe": [
+        "显式标识",
+        "隐式标识",
+        "元数据"
+      ],
+      "lead_time": "1-2 周（改导出链路）",
+      "basis": "《人工智能生成合成内容标识办法》（2025-09-01 施行）；强制性国标 GB 45438-2025",
+      "basis_level": "rule",
+      "verify_url": "https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm",
+      "confidence": "high",
+      "note": "上架审核环节会被要求说明是否提供 AI 生成服务并核验标识材料；删除/篡改标识本身违法。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "AI生成服务",
+      "subdomain": "训练数据",
+      "rule": "如果使用他人作品、网页内容、用户数据训练或微调模型，那么须确保来源合法、有授权或落入法定许可，并建立语料来源记录与侵权投诉处置机制。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "训练",
+        "语料",
+        "数据集",
+        "微调",
+        "爬取",
+        "版权"
+      ],
+      "probe": [
+        "语料合法",
+        "授权",
+        "来源记录"
+      ],
+      "lead_time": "1-3 个月（清理与替换高风险语料）",
+      "basis": "《生成式人工智能服务管理暂行办法》第 7 条；《著作权法》",
+      "basis_level": "rule",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "“网上公开就能用”不成立；有声书、图库、字幕组资源是最高风险语料。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "AI生成服务",
+      "subdomain": "人格权",
+      "rule": "如果生成与他人形象、声音高度相似的内容（换脸、声音克隆、名人数字人），那么必须取得本人授权，并禁止用于误导性场景；即便标注“AI 合成”也不能免除侵权。",
+      "type": "compliance",
+      "severity": "redline",
+      "trigger": [
+        "换脸",
+        "声音克隆",
+        "名人",
+        "数字人",
+        "肖像",
+        "明星"
+      ],
+      "probe": [
+        "授权",
+        "肖像权",
+        "声音权"
+      ],
+      "lead_time": "2-6 周",
+      "basis": "《民法典》第 1019、1023 条；《深度合成管理规定》",
+      "basis_level": "law",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "用明星脸做带货或剧情内容，即使标明 AI，也可能同时侵犯肖像权与不正当竞争。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "AI生成服务",
+      "subdomain": "内容安全",
+      "rule": "如果向公众开放输入框，那么必须具备输入输出双向内容安全过滤、违法有害信息处置流程与投诉举报入口，并留存日志不少于 6 个月。",
+      "type": "compliance",
+      "severity": "blocker",
+      "trigger": [
+        "输入框",
+        "prompt",
+        "用户输入",
+        "对话",
+        "生成内容"
+      ],
+      "probe": [
+        "内容安全",
+        "过滤",
+        "日志留存",
+        "投诉举报"
+      ],
+      "lead_time": "3-6 周",
+      "basis": "《生成式人工智能服务管理暂行办法》第 9、14、15 条",
+      "basis_level": "rule",
+      "verify_url": "https://www.cac.gov.cn/",
+      "confidence": "high",
+      "note": "只做输出过滤不够，诱导性输入同样要被拦截并可追溯。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    },
+    {
+      "domain": "AI生成服务",
+      "subdomain": "资源前提",
+      "rule": "如果要做视频生成类产品，那么必须提前测算单条成片的推理成本与并发峰值成本，并准备降级方案（低分辨率/排队/限额），否则一次爆量即可烧穿预算。",
+      "type": "resource",
+      "severity": "blocker",
+      "trigger": [
+        "视频生成",
+        "算力",
+        "gpu",
+        "成本",
+        "并发",
+        "api调用"
+      ],
+      "probe": [
+        "成本测算",
+        "降级",
+        "限额",
+        "并发"
+      ],
+      "lead_time": "1-2 周（压测与计费模型）",
+      "basis": "行业实践（非监管要求）",
+      "basis_level": "practice",
+      "verify_url": "",
+      "confidence": "medium",
+      "note": "视频类产品的毛利率极容易被推理成本吃光，定价必须按“秒/条”倒算，而不是拍脑袋定会员价。",
+      "source": "seed",
+      "provenance": "rfe-original",
+      "upstream": null
+    }
+  ]
+}
