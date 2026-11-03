@@ -18,7 +18,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 
 ## 零、使用前提与能力边界（必读）
 
-> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.3.0**，配套 vague-to-product **v2.3.0**。
+> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.3.0**，配套 vague-to-product **v2.4.0**。
 
 ### 0.1 三档能力边界（A / B / C）
 
@@ -411,7 +411,7 @@ MIT © 2026 张勇鑫 (Zhang Yongxin)
 ## 附录 D · GitHub Release 部署与发版校验
 
 1. 从 GitHub Release 下载 `fuzzy-reverse-flow-v1.3.0.zip`，核对页面给出的 **SHA256**。
-2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.3.0.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
+2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.4.0.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
 3. 执行 `python scripts/selftest.py`，应输出「全部通过」；再跑 `rfe init` → `rfe migrate --check`，完成 0.2 节 12 项自检。
 4. 维护者发版固定顺序：**改代码 → 更新 README.md 与 使用说明.txt → `python _check_docs.py` → 组装发布包 → `python _check_docs.py --zip dist/<包名>.zip` → 提交推送 → 上传 / 替换 Release 附件**。两轮校验全部 PASS 才允许发版。
 
