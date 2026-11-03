@@ -16,6 +16,7 @@
 - **禁止公开 SaaS 条款**：允许自用与内网环回复用，禁止公开 SaaS 产品化、对外经营性 API、面向不特定公众的付费服务；P2-3 简易 MCP Server 本期不实施。
 - **GitHub Release ZIP**：`fuzzy-reverse-flow-v1.3.0.zip` 带 SHA256。
 - **`_check_docs.py` 发版校验**（含 `--zip` 包内文档比对）。
+- **内置完整案例 `examples/`**：`娱乐小程序-逆向施工图.md`（v1.3.0 真实推演输出整理，输入「我想做一个娱乐小程序」，含 19 条合规红线、10 个死亡点、8 个里程碑与规则萃取回执）与案例索引 `README.md`；`package.py` 改为随包分发 examples/（无隐私信息），`.gitignore` 同步放开，`_check_docs.py` 新增案例一致性断言。
 
 ### Changed
 - 命令表新增 `migrate`；自测新增 6 项迁移/编码断言（25 项全部通过）。

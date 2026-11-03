@@ -69,6 +69,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 ### 0.5 章节指引
 
 - 知识库分层与版本迁移 → 附录 A；统一问题编码 → 附录 B；季度复核 → 附录 C；Release 部署与发版校验 → 附录 D。
+- 内置完整案例（真实推演输出，先看输出再动手）→ `examples/娱乐小程序-逆向施工图.md` 与 `examples/README.md`。
 - 环境变量与路径、完整命令清单 → [`使用说明.txt`](使用说明.txt) 第 2、3 节。
 
 ---
@@ -147,6 +148,17 @@ python scripts/rfe.py pitfall recall -q "上线 备案"
 
 ---
 
+## 内置完整案例（先看输出，再动手）
+
+不想先啃方法论？直接看一份**真实推演输出**：输入只有一句「我想做一个娱乐小程序」，输出是一张含 **19 条合规红线、10 个死亡点、8 个里程碑**的逆向施工图，并把 3 条规则＋1 条坑卡沉淀进知识库待审区。
+
+- 完整案例：[`examples/娱乐小程序-逆向施工图.md`](examples/娱乐小程序-逆向施工图.md)
+- 案例索引（怎么读、对应哪些阶段与命令、怎么复现）：[`examples/README.md`](examples/README.md)
+
+> 案例由 fuzzy-reverse-flow v1.3.0 真实运行输出整理而成，随包分发；文末附官方核实入口与 7 条免责声明。引用其中法规与金额前请按案例第 5 节逐条人工核实。
+
+---
+
 ## 检测：四层验证，逐层有命令
 
 装完不等于能用。按下面四层验，出问题能定位到具体一层。
@@ -203,7 +215,7 @@ python scripts/package.py --no-check       # 跳过前置检测（不推荐）
 
 打包时自动：
 
-- **排除** `examples/`（私有推演案例，不随包发布）、`.kb*`（本地知识库，含个人项目与踩坑记录）、`__pycache__`、`dist/`；
+- **包含** `examples/`（内置公开案例，真实推演输出整理，随包分发便于理解输出形态）；**排除** `.kb*`（本地知识库，含个人项目与踩坑记录）、`__pycache__`、`dist/`；
 - 生成 `MANIFEST.txt`（逐文件 SHA256）与 `SHA256SUMS.txt`，便于接收方校验；
 - 打包前自动跑第 1、2、3 层检测，不通过则拒绝出包；
 - **可复现构建**：包内所有条目使用固定时间戳（1980-01-01），因此**内容相同必然得到相同的 SHA256**。同样的代码在任何人机器上打包都得到同一个校验值，校验值才有意义。
@@ -293,7 +305,7 @@ certutil -hashfile <file> SHA256 # Windows 校验整包
 # 1. 新增领域：在 kb_seed/00_taxonomy.json 加 triggers
 # 2. 新增规则：kb_seed/NN_<domain>.json，注意 severity 不要滥用 redline
 # 3. 自测：python scripts/selftest.py
-# 4. 体检示例：python scripts/rfe.py audit -p examples/01-电商App-逆向推演.md -d "电商平台"
+# 4. 体检示例：python scripts/rfe.py audit -p examples/娱乐小程序-逆向施工图.md -d "小程序"
 ```
 
 取舍标准只有一条：**这条规则能让下一个人的方案少踩一个具体的坑吗？** 不能就不收。
@@ -327,6 +339,9 @@ fuzzy-reverse-flow/
 │   ├── rule-schema.md
 │   └── anti-patterns.md
 ├── kb_seed/                  # 种子规则库（JSON，每条带 source/provenance）
+├── examples/                 # 内置公开案例（真实推演输出整理，随包分发）
+│   ├── README.md             # 案例索引：怎么读、怎么复现
+│   └── 娱乐小程序-逆向施工图.md
 ├── scripts/
 │   ├── rfe.py                # 知识库 CLI（零依赖）
 │   ├── install.py            # 一键安装 + 四层检测
@@ -337,7 +352,7 @@ fuzzy-reverse-flow/
 └── assets/templates/         # 报告骨架 / 倒排期 / 规则卡 / 坑卡
 ```
 
-> 私有推演案例（电商 App、招聘小程序）**不随包发布**，存放于仓库外的 `../fuzzy-reverse-flow-私有案例/`。自测不依赖它们。`examples/` 已被 `.gitignore` 与打包脚本双重排除。
+> **内置公开案例**（`examples/`，如娱乐小程序逆向施工图）为真实推演输出整理，无隐私信息，随仓库提交并随包分发。含真实项目与商业信息的**私有推演案例**（电商 App、招聘小程序）仍不随包发布，存放于仓库外的 `../fuzzy-reverse-flow-私有案例/`；自测不依赖任何案例文件。
 
 ---
 

@@ -81,6 +81,12 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
     python scripts/package.py           可复现打包到 dist/（固定时间戳）
     python scripts/provenance_check.py  原创性溯源扫描
 
+  内置完整案例（v1.3.0 起随包分发，先看输出再动手）
+    examples/README.md                  案例索引：怎么读、对应哪些阶段与命令、怎么复现
+    examples/娱乐小程序-逆向施工图.md    真实推演输出整理：输入「我想做一个娱乐小程序」，
+                                        输出 19 条合规红线 + 10 个死亡点 + 8 个里程碑
+                                        的逆向施工图，并沉淀 3 条规则 + 1 条坑卡进待审区
+
 【4. 知识库分层、待审区与版本迁移（v1.3.0 核心）】
   4.1 只读种子库 kb_seed/ 随仓库分发，永不写入；可写本地库只认 RFE_KB。
       init / add / pitfall / settle / approve / verify / doctor --fix / migrate

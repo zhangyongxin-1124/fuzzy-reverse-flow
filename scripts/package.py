@@ -7,8 +7,9 @@
     python scripts/package.py --list     # 只列会打包哪些文件
     python scripts/package.py --no-check # 跳过前置检测（不建议）
 
+v1.3.0 起内置公开案例：examples/（真实推演输出整理，无隐私信息）随包分发，
+    便于使用者先看懂输出形态。含真实项目信息的私有案例仍存仓库外，不进 examples/。
 打包时强制排除：
-    examples/        私有推演案例（含真实项目信息，不对外）
     .kb* / kb_local/ 本地知识库（个人规则、踩坑记录）
     __pycache__ / *.pyc / dist/
 """
@@ -26,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from install import SKILL_ROOT, parse_frontmatter, verify  # noqa: E402
 
 EXCLUDE_DIRS = {"__pycache__", ".git", ".kbtest", "dist", "node_modules",
-                "examples", "kb_local", ".vscode", ".idea"}
+                "kb_local", ".vscode", ".idea"}
 EXCLUDE_GLOBS = (".kb", ".kb*", "*.pyc", "*.pyo", "*.tmp", ".DS_Store", "Thumbs.db")
 
 # 固定时间戳（zip 最小可表示时间），用于可复现构建：同内容必得同 SHA256
@@ -79,7 +80,7 @@ def main() -> int:
     total = sum((SKILL_ROOT / f).stat().st_size for f in files)
     print(f"技能: {name}  v{version}")
     print(f"文件: {len(files)} 个，{total / 1024:.1f} KB")
-    print("排除: examples/（私有案例）, .kb*（本地知识库）, __pycache__, dist/")
+    print("包含: examples/（内置公开案例）; 排除: .kb*（本地知识库）, __pycache__, dist/")
 
     if args.list:
         print("\n[清单]")
@@ -109,11 +110,6 @@ def main() -> int:
             print("\n检测未通过，拒绝打包（确认无误可加 --no-check）。")
             return 1
 
-        leaked = [f for f in files if f.parts and f.parts[0] == "examples"]
-        if leaked:
-            print(f"  ✗ 私有案例泄漏进包：{leaked[:3]}")
-            return 1
-
     out = Path(args.out) if args.out else SKILL_ROOT / "dist" / f"{name}-v{version}.zip"
     out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -138,7 +134,7 @@ def main() -> int:
         manifest = "\n".join([
             f"# {name} v{version}",
             f"# files: {len(checks)}",
-            f"# excluded: examples/, .kb*, __pycache__, dist/",
+            f"# excluded: .kb*, __pycache__, dist/",
             "",
         ] + [f"{h}  {p}" for h, p, _ in checks])
         put(z, f"{name}/MANIFEST.txt", manifest.encode("utf-8"))

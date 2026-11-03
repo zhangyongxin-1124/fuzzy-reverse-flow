@@ -86,6 +86,7 @@ COMMON = [
     "schema_version=2", "GitHub Release", "SHA256", "_check_docs.py --zip",
     "V2P-QG", "V2P-OR", "RFE-RL", "RFE-PT", "RFE-DR", "references/issue-codes.md",
     "RFE-DR-101", "RFE-DR-102", "91-180", "180 天",
+    "内置完整案例", "examples/娱乐小程序-逆向施工图.md",
     "张勇鑫", "P2-3", "本期不实施",
 ]
 
@@ -120,6 +121,9 @@ def main() -> int:
         check("rfe.py 声明只读种子库不写入", "只读种子库" in rfe and "永不写入" in rfe)
         check("rfe.py doctor 输出 RFE-DR 编码", "[RFE-DR-001]" in rfe and "[RFE-DR-102]" in rfe)
         check("rfe.py 默认知识库路径一致", "reverse-engine" in rfe)
+        pkg = read("scripts/package.py")
+        check("package.py 随包分发 examples/（内置公开案例）",
+              '"examples"' not in pkg and "内置公开案例" in pkg)
     else:
         bridge = read("scripts/bridge.py")
         orch = read("scripts/orchestrate.py")
