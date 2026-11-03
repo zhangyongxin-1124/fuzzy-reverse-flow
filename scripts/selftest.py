@@ -165,6 +165,27 @@ def main() -> int:
     r = run("stats", kb=tmp)
     check("stats 可运行", "规则总数" in r.stdout, r.stdout[-200:])
 
+    # [8+] RFE-DR-103：法规类规则超 90 天触发短周期提醒
+    from datetime import date, timedelta
+    reg = {"id": "R-REG-SELFTEST", "rule": "测试法规规则：平台需办理某备案",
+           "tags": ["法规"], "domain": "测试",
+           "verified_at": (date.today() - timedelta(days=100)).isoformat(),
+           "fingerprint": "fp-reg-selftest", "source": "selftest", "confidence": "medium"}
+    with open(Path(tmp) / "rules.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(reg, ensure_ascii=False) + "\n")
+    r = run("doctor", kb=tmp)
+    check("doctor 对法规类超 90 天输出 RFE-DR-103",
+          r.returncode == 0 and "RFE-DR-103" in r.stdout and "regulation-watch.md" in r.stdout,
+          r.stdout[-300:])
+    # 普通规则同天数不应触发 DR-103（对照）
+    plain = dict(reg, id="R-PLAIN-SELFTEST", tags=["通用"], fingerprint="fp-plain-selftest")
+    with open(Path(tmp) / "rules.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(plain, ensure_ascii=False) + "\n")
+    r = run("doctor", kb=tmp)
+    check("普通规则超 90 天走 RFE-DR-101 而非 DR-103",
+          r.returncode == 0 and "R-PLAIN-SELFTEST" not in (r.stdout.split("RFE-DR-103")[1].split("RFE-DR-")[0] if "RFE-DR-103" in r.stdout else ""),
+          r.stdout[-300:])
+
     # [9] 开源合规：原创性自查必须通过（防止后续提交夹带第三方代码/文本）
     print()
     print("[8b] migrate：结构版本迁移与只读种子库分层")

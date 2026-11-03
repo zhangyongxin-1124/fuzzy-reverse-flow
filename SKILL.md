@@ -2,7 +2,7 @@
 name: fuzzy-reverse-flow
 description: 模糊问题逆流程推理工具（Fuzzy Reverse Flow）。把一个模糊想法（做App/小程序、开店、做招聘平台、做内容IP或短剧、办线下活动、做硬件、做AI服务）反推成"合规红线 + 资源底线 + 致命风险 + 倒排里程碑"的可执行施工图；并把每次推演萃取成领域规则与踩坑记忆，越用越准。当出现"我想做XX / 这个需要什么条件 / 帮我倒推路径 / 要办什么证 / 会不会违规 / 这事能不能干 / 从结果倒推 / 反向推导 / 逆流程"时使用。 v1.3.0 新增：`rfe migrate` 知识库结构版本迁移（schema_version=2，只读种子库 kb_seed/ 永不写入、自动备份、字段规范化与 fingerprint 去重）；`rfe doctor` 季度复核 91-180 天 / 过期 >180 天分级并输出 RFE-DR-* 统一问题编码；每份输出报告强制附带知识库复核时间戳与完整免责声明；明确禁止公开 SaaS 产品化。
 description_en: Fuzzy Reverse Flow — turns a vague idea into a reverse-engineered execution plan: compliance redlines, resource floors, fatal risks, and a backward-scheduled milestone tree. Extracts reusable domain rules and pitfall memory after each run. Use for "I want to build X / what does it require / reverse the path / what licenses do I need / is this legal / work backward from the outcome".
-version: 1.3.0
+version: 1.4.0
 license: MIT
 ---
 

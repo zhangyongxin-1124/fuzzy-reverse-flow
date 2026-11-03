@@ -18,7 +18,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 
 ## 零、使用前提与能力边界（必读）
 
-> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.3.0**，配套 vague-to-product **v2.4.0**。
+> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.4.0**，配套 vague-to-product **v2.5.0**。
 
 ### 0.1 三档能力边界（A / B / C）
 
@@ -64,7 +64,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 - **允许**：个人自用；内网团队多个 Agent 复用（如需服务化，仅允许绑定 `127.0.0.1` 环回地址，不得对外暴露）；GitHub 开源与 Release 分发。
 - **禁止**：公开 SaaS 产品化；对外经营性 API；面向不特定公众的付费服务；把规则库当作商业合规数据服务售卖；删除或改写 MIT 署名。
 - **理由**：规则是经验总结而非合规意见，公开对外提供会构成事实上的「合规意见服务」，带来法律风险。本项目不做、不建议、不授权。
-- **P2-3「简易 MCP Server」本期不实施**（属择机迭代）：如未来实施，仅限内网环回复用，仍禁止任何公网暴露与公开 SaaS 形态。
+- **P2-3 已实施为仅本地形态（vague-to-product v2.5.0）**：配套技能的本地 stdio MCP Server 只读、无网络监听；本仓库自身仍无任何 MCP/HTTP 服务，禁止公开 SaaS 边界不变。
 
 ### 0.5 章节指引
 
@@ -107,7 +107,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 - **可进 CI 的方案体检**：`audit` 检查四阶段完整性、红线覆盖率、危险话术（承诺过审/包过/个人账户收款/规避审核），有红项返回非 0。
 - **场景感知**：方案没触及的场景（比如没做劳务派遣）不会被强行要求，但可用 `--strict` 全量校验。
 - **否定语境识别**：写"严禁个人账户收款"不会被误判为风险表述。
-- **带时效的规则**：每条有 `confidence` 与 `verified_at`，超 180 天由 `doctor` 标记待复核；废止条目保留为 `deprecated`，召回时提示"勿再引用"。
+- **带时效的规则**：每条有 `confidence` 与 `verified_at`，法规类规则超 90 天由 `doctor` 触发短周期快更提醒（RFE-DR-103，信息源与流程见 [`references/regulation-watch.md`](references/regulation-watch.md)），普通规则超 180 天标记待复核；废止条目保留为 `deprecated`，召回时提示"勿再引用"。
 - **专收"常见误传"**：例如"《互联网医疗保健信息服务审核同意书》"这类已取消的旧审批，会主动纠偏，避免整份方案方向错误。
 
 ---
@@ -394,14 +394,14 @@ MIT © 2026 张勇鑫 (Zhang Yongxin)
 
 四条硬规则：① 前缀全局唯一；② 编码幂等（已带前缀不再叠加）；③ 同一编码可跨节引用，但按报告末尾「问题编码索引（去重）」计数，红线节与资源底线节按编码集合去重过滤；④ `v2p gate` 仍输出短码 `QG-xxx`（自测依赖），报告引用时用全称。完整规范见 [`references/issue-codes.md`](references/issue-codes.md)。
 
-固定诊断码：`RFE-DR-001` 重复 ID、`RFE-DR-002` 缺 `rule` 字段、`RFE-DR-003` 缺 fingerprint、`RFE-DR-101` 季度复核到期（91-180 天）、`RFE-DR-102` 过期规则（>180 天或无核实日期）。
+固定诊断码：`RFE-DR-001` 重复 ID、`RFE-DR-002` 缺 `rule` 字段、`RFE-DR-003` 缺 fingerprint、`RFE-DR-101` 季度复核到期（91-180 天）、`RFE-DR-102` 过期规则（>180 天或无核实日期）、`RFE-DR-103` 法规类规则超 90 天未核实（短周期快更提醒）。
 
 ---
 
 ## 附录 C · 长期维护：季度复核机制
 
 1. 每季度人工核对官方入口后执行 `rfe meta --set-review --note "..."` 记录复核日期。
-2. `rfe doctor` 分级标记：91-180 天未核实 → `RFE-DR-101`；超过 180 天或无核实日期 → `RFE-DR-102`。
+2. `rfe doctor` 分级标记：法规类规则超 90 天 → `RFE-DR-103`（快更流程见 references/regulation-watch.md）；普通规则 91-180 天未核实 → `RFE-DR-101`；超过 180 天或无核实日期 → `RFE-DR-102`。
 3. 逐条核实后执行 `rfe verify --id <ID> --confidence high`。
 4. 每份输出报告强制附带知识库复核时间戳与 0.3 节完整免责声明。
 5. 推广路径固定为：**自用提效 → GitHub 开源 Release**；拦截公开 SaaS，明确禁止公开 SaaS 产品化。
@@ -410,8 +410,8 @@ MIT © 2026 张勇鑫 (Zhang Yongxin)
 
 ## 附录 D · GitHub Release 部署与发版校验
 
-1. 从 GitHub Release 下载 `fuzzy-reverse-flow-v1.3.0.zip`，核对页面给出的 **SHA256**。
-2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.4.0.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
+1. 从 GitHub Release 下载 `fuzzy-reverse-flow-v1.4.0.zip`，核对页面给出的 **SHA256**。
+2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.5.0.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
 3. 执行 `python scripts/selftest.py`，应输出「全部通过」；再跑 `rfe init` → `rfe migrate --check`，完成 0.2 节 12 项自检。
 4. 维护者发版固定顺序：**改代码 → 更新 README.md 与 使用说明.txt → `python _check_docs.py` → 组装发布包 → `python _check_docs.py --zip dist/<包名>.zip` → 提交推送 → 上传 / 替换 Release 附件**。两轮校验全部 PASS 才允许发版。
 

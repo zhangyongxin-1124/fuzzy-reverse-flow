@@ -929,7 +929,13 @@ def cmd_doctor(args) -> int:
     if dup:
         issues += 1
         print(f"[RFE-DR-001] 重复 ID: {', '.join(sorted(map(str, dup)))}")
-    quarterly, stale = [], []
+    quarterly, stale, reg_overdue = [], [], []
+
+    def _is_reg(item: dict) -> bool:
+        blob = " ".join([str(item.get("category", ""))]
+                        + [str(t) for t in (item.get("tags") or [])])
+        return ("regulation" in blob.lower()) or ("法规" in blob) or ("监管" in blob)
+
     for r in rules:
         if not r.get("rule"):
             issues += 1
@@ -943,7 +949,11 @@ def cmd_doctor(args) -> int:
                 if days > 180:
                     stale.append(r.get("id"))
                 elif days > 90:
-                    quarterly.append(r.get("id"))
+                    if _is_reg(r):
+                        # 法规类独立短周期：90-180 天 → RFE-DR-103（不与季度复核重复计数）
+                        reg_overdue.append(r.get("id"))
+                    else:
+                        quarterly.append(r.get("id"))
             except ValueError:
                 stale.append(r.get("id"))
         if not r.get("fingerprint"):
@@ -958,7 +968,13 @@ def cmd_doctor(args) -> int:
         print(f"[RFE-DR-102] 过期规则（无核实日期或超 180 天）{len(stale)} 条："
               f"{', '.join(map(str, stale[:10]))}" + (" ..." if len(stale) > 10 else ""))
         print("    建议逐条核对官方入口后执行 verify --id <ID> --confidence high")
-    if not args.fix and not issues and not stale and not quarterly:
+    if reg_overdue:
+        print(f"[RFE-DR-103] 法规类规则超 90 天未核实（自动提醒：法规变动快，短周期快更）"
+              f"{len(reg_overdue)} 条："
+              f"{', '.join(map(str, reg_overdue[:10]))}" + (" ..." if len(reg_overdue) > 10 else ""))
+        print("    权威信息源与人工快更流程见 references/regulation-watch.md；"
+              "核实后执行 verify --id <ID> --confidence high")
+    if not args.fix and not issues and not stale and not quarterly and not reg_overdue:
         print("健康：无需处理。")
     return 0
 

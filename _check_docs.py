@@ -63,7 +63,7 @@ SKILL = read("SKILL.md")
 _name_m = re.search(r"(?m)^name:\s*([^\s]+)", SKILL)
 NAME = _name_m.group(1).strip() if _name_m else ROOT.name
 VERSION = frontmatter_version(SKILL)
-PEER_VERSION = {"vague-to-product": "1.3.0", "fuzzy-reverse-flow": "2.4.0"}.get(NAME, "")
+PEER_VERSION = {"vague-to-product": "2.5.0", "fuzzy-reverse-flow": "1.4.0"}.get(NAME, "")
 PEER_NAME = {"vague-to-product": "fuzzy-reverse-flow", "fuzzy-reverse-flow": "vague-to-product"}.get(NAME, "")
 
 README = read("README.md")
@@ -87,7 +87,8 @@ COMMON = [
     "V2P-QG", "V2P-OR", "RFE-RL", "RFE-PT", "RFE-DR", "references/issue-codes.md",
     "RFE-DR-101", "RFE-DR-102", "91-180", "180 天",
     "内置完整案例", "examples/娱乐小程序-逆向施工图.md",
-    "张勇鑫", "P2-3", "本期不实施",
+    "张勇鑫", "P2-3", "已实施为仅本地形态",
+    "RFE-DR-103", "法规类规则超 90 天", "references/regulation-watch.md",
 ]
 
 
@@ -120,6 +121,12 @@ def main() -> int:
         check("rfe.py 注册 migrate 子命令", 'add_parser("migrate"' in rfe)
         check("rfe.py 声明只读种子库不写入", "只读种子库" in rfe and "永不写入" in rfe)
         check("rfe.py doctor 输出 RFE-DR 编码", "[RFE-DR-001]" in rfe and "[RFE-DR-102]" in rfe)
+        check("rfe.py doctor 含法规类短周期提醒 RFE-DR-103",
+              "[RFE-DR-103]" in rfe and "法规类规则超 90 天" in rfe)
+        check("regulation-watch.md 存在且含信息源与快更流程",
+              bool(read("references/regulation-watch.md"))
+              and "权威信息源清单" in read("references/regulation-watch.md")
+              and "人工快更流程" in read("references/regulation-watch.md"))
         check("rfe.py 默认知识库路径一致", "reverse-engine" in rfe)
         pkg = read("scripts/package.py")
         check("package.py 随包分发 examples/（内置公开案例）",
@@ -164,7 +171,7 @@ def main() -> int:
     for d, tag in ((README, "README"), (TXT, "使用说明.txt")):
         check(f"{tag} 明确禁止公开 SaaS 产品化", "公开 SaaS 产品化" in d and "禁止" in d)
         check(f"{tag} 明确仅内网环回 127.0.0.1", "127.0.0.1" in d)
-        check(f"{tag} 声明 P2-3 本期不实施", "P2-3" in d and "本期不实施" in d)
+        check(f"{tag} 声明 P2-3 已实施为仅本地形态", "P2-3" in d and "已实施为仅本地形态" in d)
         check(f"{tag} 声明规则非法律意见", "非法律意见" in d or "不构成法律" in d)
 
     if args.zip_path:

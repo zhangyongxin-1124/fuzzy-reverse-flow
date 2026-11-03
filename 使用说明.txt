@@ -1,6 +1,6 @@
 ================================================================================
 fuzzy-reverse-flow（模糊问题逆流程推理工具） 使用说明
-版本：v1.3.0    对应 vague-to-product v2.4.0
+版本：v1.4.0    对应 vague-to-product v2.5.0
 许可证：MIT License    Copyright (c) 2026 张勇鑫 (Zhang Yongxin)
 本文件与 README.md 同为发版必检文档，内容必须与代码完全一致。
 ================================================================================
@@ -58,7 +58,7 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
   安装位置      WorkBuddy: ~/.workbuddy/skills/<技能名>/
                 Codex CLI: ~/.codex/skills/<技能名>/
 
-【3. 命令清单（v1.3.0，全部零依赖纯标准库）】
+【3. 命令清单（v1.4.0，全部零依赖纯标准库）】
   rfe init                        初始化知识库并导入 103 条种子规则 / 13 领域
   rfe recall --query "..." [--json] [--severity redline|blocker|advisory]
   rfe infer --text "..." --json   推断领域
@@ -77,7 +77,7 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
   不发起追问；本工具单独使用的能力完整保留。
 
   自测与打包
-    python scripts/selftest.py          端到端自测（v1.3.0：25 项）
+    python scripts/selftest.py          端到端自测
     python scripts/package.py           可复现打包到 dist/（固定时间戳）
     python scripts/provenance_check.py  原创性溯源扫描
 
@@ -109,7 +109,9 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
   RFE-RL-*   规则库红线与阻断规则
   RFE-PT-*   踩坑记忆（坑卡）
   RFE-DR-*   知识库自检诊断（001 重复 ID / 002 缺 rule / 003 缺 fingerprint /
-              101 季度复核到期 91-180 天 / 102 过期规则 >180 天）
+              101 季度复核到期 91-180 天 / 102 过期规则 >180 天 /
+              103 法规类规则超 90 天未核实，短周期快更提醒，
+              信息源与流程见 references/regulation-watch.md）
   规则：前缀全局唯一；编码幂等（已带前缀不再叠加）；同一编码可跨节引用但
   按「问题编码索引（去重）」计数；红线节与资源底线节按编码集合去重过滤。
   完整规范见 references/issue-codes.md。
@@ -137,18 +139,21 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
         把规则库当作商业合规数据服务售卖；删除或改写 MIT 署名。
   理由：规则是经验总结而非合规意见，公开对外提供会构成事实上的
         「合规意见服务」，带来法律风险。本项目不做、不建议、不授权。
-  P2-3「简易 MCP Server」本期不实施（属择机迭代）：如未来实施，
+  P2-3 已实施为仅本地形态（vague-to-product v2.5.0）：配套技能的
+  本地 stdio MCP Server 只读、无网络监听；本仓库自身无 MCP/HTTP 服务，
   仅限内网环回复用，仍禁止任何公网暴露与公开 SaaS 形态。
 
 【8. 长期维护：季度复核机制】
   8.1 每季度人工核对官方入口后执行 rfe meta --set-review 记录复核日期。
-  8.2 rfe doctor 分级标记：91-180 天未核实 → RFE-DR-101；
+  8.2 rfe doctor 分级标记：法规类规则超 90 天 → RFE-DR-103（订阅
+      权威信息源 + 人工快更，见 references/regulation-watch.md）；
+      普通规则 91-180 天未核实 → RFE-DR-101；
       超过 180 天或无核实日期 → RFE-DR-102。
   8.3 逐条核实后执行 rfe verify --id <ID> --confidence high。
   8.4 每份输出报告强制附带知识库复核时间戳与第 6 节完整免责声明。
 
 【9. 安装与 Release 部署（降低部署成本）】
-  9.1 从 GitHub Release 下载 fuzzy-reverse-flow-v1.3.0.zip，核对页面 SHA256。
+  9.1 从 GitHub Release 下载 fuzzy-reverse-flow-v1.4.0.zip，核对页面 SHA256。
   9.2 解压到 ~/.workbuddy/skills/fuzzy-reverse-flow/（WorkBuddy）
       或 ~/.codex/skills/fuzzy-reverse-flow/（Codex CLI）。
   9.3 执行 python scripts/rfe.py init，再执行 rfe migrate --check。
