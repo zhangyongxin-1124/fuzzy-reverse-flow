@@ -19,9 +19,16 @@ rfe.py — 模糊问题逆流程推理工具（Fuzzy Reverse Flow）知识库 CL
   export    导出 Markdown / JSON
   verify    更新规则核实状态
   doctor    知识库自检
+  migrate   知识库结构版本迁移（只写可写本地库，绝不写只读种子库）
+
+知识库分两层（v1.3.0 起显式声明）
+  只读种子库：SKILL_ROOT/kb_seed/*.json —— 随仓库分发，永不写入、永不修改
+  可写本地库：RFE_KB（默认 ~/.workbuddy/reverse-engine）—— init / add / pitfall /
+              settle / approve / verify / doctor --fix / migrate 只写这一层
+  多宿主（WorkBuddy、Codex 等）共用同一份可写本地库，故新沉淀一律先进待审区。
 
 环境变量
-  RFE_KB    知识库目录，默认 ~/.workbuddy/reverse-engine
+  RFE_KB    可写本地知识库目录，默认 ~/.workbuddy/reverse-engine
 """
 
 from __future__ import annotations
@@ -60,7 +67,14 @@ DEFAULT_KB = Path(os.environ.get("RFE_KB", "")) if os.environ.get("RFE_KB") else
 RULES = "rules.jsonl"
 PITFALLS = "pitfalls.jsonl"
 PENDING = "pending.jsonl"   # 待审区：新沉淀的规则/坑卡先入此，人工确认后转正
-META = "kb_meta.json"       # 知识库元数据（复核时间戳等）
+META = "kb_meta.json"       # 知识库元数据（复核时间戳、结构版本等）
+
+SCHEMA_VERSION = 2          # 可写本地库的结构版本（migrate 的目标版本）
+SCHEMA_HISTORY = {
+    0: "v1.1.x 及更早：无 kb_meta.json，字段不统一",
+    1: "v1.2.0：rules / pitfalls / pending 三件套 + 复核时间戳",
+    2: "v1.3.0：字段规范化、fingerprint 去重、季度复核分级、只读/可写库显式分层",
+}
 
 SEVERITY_ORDER = {"redline": 0, "blocker": 1, "advisory": 2}
 SEVERITY_LABEL = {"redline": "[红线]", "blocker": "[阻断]", "advisory": "[提示]"}
@@ -832,6 +846,80 @@ def cmd_verify(args) -> int:
     return 0
 
 
+def _migrate_items(items: list, kind: str) -> tuple:
+    """字段规范化 + fingerprint 去重。返回 (新列表, 规范化条数, 去重条数)。"""
+    out, changed, removed, seen = [], 0, 0, set()
+    for it in items:
+        if not isinstance(it, dict):
+            removed += 1
+            continue
+        before = json.dumps(it, ensure_ascii=False, sort_keys=True)
+        it.setdefault("created_at", now_iso())
+        it.setdefault("source", "unknown")
+        it.setdefault("status", "active")
+        it.setdefault("review", "approved")
+        it.setdefault("schema", SCHEMA_VERSION)
+        if kind == "rule":
+            it.setdefault("severity", "advisory")
+            it.setdefault("type", "compliance")
+            it.setdefault("hit_count", 0)
+            it.setdefault("verified_at", "")
+            if not it.get("id"):
+                it["id"] = next_id("RULE-" + _domain_code(it.get("domain", "")), out)
+        else:
+            if not it.get("id"):
+                it["id"] = next_id("PIT-" + _domain_code(it.get("domain", "")), out)
+        fp = it.get("fingerprint") or fingerprint(it)
+        if fp in seen:
+            removed += 1
+            continue
+        seen.add(fp)
+        it["fingerprint"] = fp
+        if json.dumps(it, ensure_ascii=False, sort_keys=True) != before:
+            changed += 1
+        out.append(it)
+    return out, changed, removed
+
+
+def cmd_migrate(args) -> int:
+    """结构版本迁移：只读种子库 kb_seed/ 永不写入，唯一写入目标是可写本地库。"""
+    ensure_kb()
+    meta = load_meta()
+    cur = int(meta.get("schema_version", 0) or 0)
+    print(f"只读种子库（永不写入）：{SEED_DIR}")
+    print(f"可写本地库（唯一写入目标）：{DEFAULT_KB}")
+    print(f"结构版本：v{cur} → v{SCHEMA_VERSION}｜{SCHEMA_HISTORY.get(SCHEMA_VERSION, '')}")
+    if cur >= SCHEMA_VERSION:
+        print("已是最新结构，无需迁移。")
+        return 0
+    rp, pp = kb_path(RULES), kb_path(PITFALLS)
+    rules, pits = read_jsonl(rp), read_jsonl(pp)
+    nr, cr, dr = _migrate_items(rules, "rule")
+    np_, cp, dp = _migrate_items(pits, "pitfall")
+    print(f"规则 {len(rules)} → {len(nr)}（规范化 {cr} 条 / 去重 {dr} 条）")
+    print(f"坑卡 {len(pits)} → {len(np_)}（规范化 {cp} 条 / 去重 {dp} 条）")
+    if args.check:
+        print("--check：仅报告，未写入任何文件。")
+        return 0
+    stamp = today()
+    for src, items in ((rp, rules), (pp, pits)):
+        if src.exists():
+            bak = src.with_name(f"{src.stem}.backup-v{cur}-{stamp}{src.suffix}")
+            if not bak.exists():
+                bak.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+                print(f"已备份：{bak.name}")
+    write_jsonl(rp, nr)
+    write_jsonl(pp, np_)
+    meta["schema_version"] = SCHEMA_VERSION
+    meta["migrated_from"] = cur
+    meta["migrated_at"] = now_iso()
+    _meta_path().write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
+                            encoding="utf-8")
+    print(f"迁移完成：kb_meta.json → schema_version={SCHEMA_VERSION}")
+    print("迁移只改结构不改语义；请接着执行 rfe doctor 与 rfe stats 复核。")
+    return 0
+
+
 def cmd_doctor(args) -> int:
     rules = read_jsonl(kb_path(RULES))
     pits = read_jsonl(kb_path(PITFALLS))
@@ -840,30 +928,37 @@ def cmd_doctor(args) -> int:
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:
         issues += 1
-        print(f"[!] 重复 ID: {', '.join(sorted(dup))}")
-    stale = []
+        print(f"[RFE-DR-001] 重复 ID: {', '.join(sorted(map(str, dup)))}")
+    quarterly, stale = [], []
     for r in rules:
         if not r.get("rule"):
             issues += 1
-            print(f"[!] {r.get('id')} 缺少 rule 字段")
+            print(f"[RFE-DR-002] {r.get('id')} 缺少 rule 字段")
         v = r.get("verified_at")
         if not v:
             stale.append(r.get("id"))
         else:
             try:
-                if (date.today() - date.fromisoformat(str(v)[:10])).days > 180:
+                days = (date.today() - date.fromisoformat(str(v)[:10])).days
+                if days > 180:
                     stale.append(r.get("id"))
+                elif days > 90:
+                    quarterly.append(r.get("id"))
             except ValueError:
                 stale.append(r.get("id"))
         if not r.get("fingerprint"):
             issues += 1
-            print(f"[!] {r.get('id')} 缺少 fingerprint（可能导致去重失效）")
+            print(f"[RFE-DR-003] {r.get('id')} 缺少 fingerprint（可能导致去重失效）")
     print(f"规则 {len(rules)} 条 / 坑 {len(pits)} 条 / 结构问题 {issues} 项")
+    if quarterly:
+        print(f"[RFE-DR-101] 季度复核到期（91-180 天未核实）{len(quarterly)} 条："
+              f"{', '.join(map(str, quarterly[:10]))}" + (" ..." if len(quarterly) > 10 else ""))
+        print("    建议安排本季度人工复核，完成后执行 meta --set-review。")
     if stale:
-        print(f"[~] 待核实或超 180 天未核实 {len(stale)} 条：{', '.join(stale[:10])}"
-              + (" …" if len(stale) > 10 else ""))
+        print(f"[RFE-DR-102] 过期规则（无核实日期或超 180 天）{len(stale)} 条："
+              f"{', '.join(map(str, stale[:10]))}" + (" ..." if len(stale) > 10 else ""))
         print("    建议逐条核对官方入口后执行 verify --id <ID> --confidence high")
-    if not args.fix and not issues and not stale:
+    if not args.fix and not issues and not stale and not quarterly:
         print("健康：无需处理。")
     return 0
 
@@ -938,9 +1033,13 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--date", default="")
     s.set_defaults(func=cmd_verify)
 
-    s = sub.add_parser("doctor", help="知识库自检")
+    s = sub.add_parser("doctor", help="知识库自检（季度复核 / 过期规则分级标记）")
     s.add_argument("--fix", action="store_true")
     s.set_defaults(func=cmd_doctor)
+
+    s = sub.add_parser("migrate", help="知识库结构版本迁移（只读种子库永不写入）")
+    s.add_argument("--check", action="store_true", help="只报告不写入")
+    s.set_defaults(func=cmd_migrate)
     return p
 
 

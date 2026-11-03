@@ -1,0 +1,165 @@
+================================================================================
+fuzzy-reverse-flow（模糊问题逆流程推理工具） 使用说明
+版本：v1.3.0    对应 vague-to-product v2.3.0
+许可证：MIT License    Copyright (c) 2026 张勇鑫 (Zhang Yongxin)
+本文件与 README.md 同为发版必检文档，内容必须与代码完全一致。
+================================================================================
+
+【0. 使用前必读：三档能力边界】
+本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内没有任何 HTTP 服务、
+MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的是「能不能拿去用」，
+不解决「别人怎么连上」。能否调用、能调用到什么程度，取决于宿主能力，分三档：
+
+  能力档 A（完整）  条件：宿主支持「读文件 + 执行命令」（tool use）
+      典型：WorkBuddy、Codex CLI、Cursor / Cline / Windsurf / Trae、Claude Code
+      能做：全套 CLI —— init / recall / infer / add / pitfall / meta / audit /
+            stats / export / verify / doctor / migrate；能拿到 103 条种子规则
+            与 19 条冷启动坑卡，输出带真实红线的推演与体检结论。
+      不能：无（这是唯一能拿到完整能力的档位）
+
+  能力档 B（注入）  条件：模型本身不能执行本地命令，但可在本地先召回规则，
+                    再把规则原文注入模型 API（DeepSeek API 等 OpenAI 兼容端点）
+      能做：拿到召回的规则原文，让模型把硬结论写成人话稿
+      不能：模型不跑 CLI、不写知识库、不产生待审区记录、不执行迁移
+
+  能力档 C（降级）  条件：网页聊天、手机 App、纯提示词输入框
+      能做：只拿到方法论提示词（四步闭环、合规六层扫描、资源底线、倒排算法）
+      不能：拿不到规则库、不能引用具体红线或法条、不能沉淀、不能迁移；
+            合规结论只能写成「请人工向官方核实」，不得伪装成确定结论
+
+  ★ 网页聊天与手机只能降级到 C 档。这不是模型智力问题，是宿主没有
+    「读文件 + 执行命令」能力。把开源可获取误当成服务可调用，是最常见的坑。
+  ★ 本文件「能力档 A/B/C」与 README「快速开始方式 A/B」含义不同，
+    后者指安装方式（方式 A 装成技能 / 方式 B 只用命令行），不要混淆。
+
+【1. 12 项调用前自检清单（逐项打勾，缺一不建议开始）】
+  1. □ 已取得技能文件副本（git clone 或 GitHub Release ZIP），并校验 SHA256
+  2. □ 已安装 Python 3.8+，命令行 python -V 可执行（零第三方依赖）
+  3. □ 用户目录可写（~/.workbuddy/ 或 RFE_KB 指向的目录可创建文件）
+  4. □ 调用宿主支持「读文件 + 执行命令」；纯网页 / 手机 App 不满足（决定性）
+  5. □ 已初始化知识库：rfe init，且 rfe stats 显示规则总数大于 0
+  6. □ 已完成结构迁移：rfe migrate --check 显示 v2，必要时执行 rfe migrate
+  7. □ 模型上下文窗口 ≥ 8K（注入规则后实测约 7418 字）
+  8. □ 知识库复核时间戳在 90 天内（rfe meta / rfe doctor 查看）
+  9. □ 已确认本次属于 A / B / C 哪一档，并接受该档能力上限
+ 10. □ 已阅读并接受第 6 节完整免责声明 7 条（报告尾部强制附带）
+ 11. □ 用途为自用或内网团队复用，不是公开 SaaS / 对外经营性 API
+ 12. □ 多宿主并行时，新沉淀走 rfe add --pending / rfe pitfall add --pending
+        → 待审区 → rfe pitfall approve/reject，不直接写正式库
+
+【2. 环境变量与路径（写代码 / 改配置时以此为准）】
+  RFE_KB        可写本地知识库目录，默认 ~/.workbuddy/reverse-engine
+  RFE_SCRIPT    v2p 的 bridge 显式指定 rfe.py 路径时使用
+  V2P_HOME      v2p 口味档案与 plans/ 报告根目录，默认 ~/.workbuddy/v2p
+  V2P_PROJECT   v2p 多项目口味隔离（对应 v2p use）
+  只读种子库    <技能目录>/kb_seed/*.json —— 随仓库分发，任何命令都不写入
+  可写本地库    RFE_KB —— rules.jsonl / pitfalls.jsonl / pending.jsonl /
+                rejected.jsonl / kb_meta.json / *.backup-v<旧版本>-<日期>.jsonl
+  安装位置      WorkBuddy: ~/.workbuddy/skills/<技能名>/
+                Codex CLI: ~/.codex/skills/<技能名>/
+
+【3. 命令清单（v1.3.0，全部零依赖纯标准库）】
+  rfe init                        初始化知识库并导入 103 条种子规则 / 13 领域
+  rfe recall --query "..." [--json] [--severity redline|blocker|advisory]
+  rfe infer --text "..." --json   推断领域
+  rfe add --file x.json [--pending]   新增规则（--pending 进待审区）
+  rfe pitfall add|recall|list|pending-list|approve --id|reject --id
+  rfe meta [--set-review --note "..."]   复核时间戳（超 90 天提示）
+  rfe audit -p <方案.md> -d <领域>      四阶段完整性 + 红线覆盖 + 危险话术
+  rfe stats                       统计 + 待审数 + 复核时间戳
+  rfe export -F md|json -o <文件>
+  rfe verify --id <ID> --confidence high|medium|low
+  rfe doctor                      结构自检 + 季度复核 / 过期规则分级标记
+  rfe migrate --check             只报告不写入（v1.3.0 新增）
+  rfe migrate                     迁移到 schema_version=2（自动备份）
+
+  被编排：v2p plan 经 bridge.py 单向静默调用本工具，只取数据、不反向调用 v2p、
+  不发起追问；本工具单独使用的能力完整保留。
+
+  自测与打包
+    python scripts/selftest.py          端到端自测（v1.3.0：25 项）
+    python scripts/package.py           可复现打包到 dist/（固定时间戳）
+    python scripts/provenance_check.py  原创性溯源扫描
+
+【4. 知识库分层、待审区与版本迁移（v1.3.0 核心）】
+  4.1 只读种子库 kb_seed/ 随仓库分发，永不写入；可写本地库只认 RFE_KB。
+      init / add / pitfall / settle / approve / verify / doctor --fix / migrate
+      只写可写本地库这一层。
+  4.2 WorkBuddy 与 Codex 等多个宿主共用同一份可写本地库，故新沉淀一律先进
+      pending.jsonl 待审区，人工 approve/reject 后才转正（reject 归档
+      rejected.jsonl），防止多宿主并行写入污染知识库。
+  4.3 结构版本：kb_meta.json 的 schema_version，当前目标 v2。
+      版本历史：v0 = v1.1.x 及更早（无元数据）；v1 = v1.2.0（三件套 +
+      复核时间戳）；v2 = v1.3.0（字段规范化、fingerprint 去重、
+      季度复核分级、只读/可写库显式分层）。
+  4.4 rfe migrate 只改结构不改语义：补齐 created_at / source / status /
+      review / schema / severity / type / hit_count / verified_at，
+      规范化缺失 ID，重算 fingerprint，按 fingerprint 去重，并自动备份旧库。
+  4.5 迁移顺序：rfe init → rfe migrate --check → rfe migrate → rfe doctor → rfe stats。
+
+【5. 统一问题编码（消除两套工具告警重复）】
+  V2P-QG-*   交付质量闸门检查项（原短码 QG-xxx，等价全称 V2P-QG-xxx）
+  V2P-OR-*   编排层冲突 / 状态告警
+  RFE-RL-*   规则库红线与阻断规则
+  RFE-PT-*   踩坑记忆（坑卡）
+  RFE-DR-*   知识库自检诊断（001 重复 ID / 002 缺 rule / 003 缺 fingerprint /
+              101 季度复核到期 91-180 天 / 102 过期规则 >180 天）
+  规则：前缀全局唯一；编码幂等（已带前缀不再叠加）；同一编码可跨节引用但
+  按「问题编码索引（去重）」计数；红线节与资源底线节按编码集合去重过滤。
+  完整规范见 references/issue-codes.md。
+
+【6. 完整免责声明（7 条，每份输出报告强制附带）】
+  1. 内容性质：全部规则、红线、坑卡与检查项为作者及贡献者的经验性总结，
+     非法律意见、非监管口径、非投资建议。
+  2. 时效风险：法律法规、平台审核规则、资质要求会变动；报告所附
+     「知识库复核时间戳」只表示上次人工复核日期，不保证当下仍有效。
+  3. 强制人工核验：任何「通过 / 阻断」结论都是自动化的必要条件判断，
+     上线、签约、投放、发布前必须由具备资质的人员向官方渠道逐条核实。
+  4. 不替代测试：静态扫描与手测清单不能替代真实环境测试、灰度验证与人工验收；
+     交付必须保留人工核验环节。
+  5. 责任边界：使用者对基于本报告作出的决策独立承担责任；
+     作者不对任何直接或间接损失负责。
+  6. 使用边界：本项目仅授权自用与内网团队复用；禁止封装为公开 SaaS、
+     对外经营性 API 或任何面向不特定公众的付费服务。
+  7. 署名保留：依据 MIT License，转载、修改与再分发必须保留
+     「Copyright (c) 2026 张勇鑫 (Zhang Yongxin)」及许可声明。
+
+【7. 边界与禁止条款（硬约束）】
+  允许：个人自用；内网团队多个 Agent 复用（如需服务化，仅允许绑定
+        127.0.0.1 环回地址，不得对外暴露）；GitHub 开源与 Release 分发。
+  禁止：公开 SaaS 产品化；对外经营性 API；面向不特定公众的付费服务；
+        把规则库当作商业合规数据服务售卖；删除或改写 MIT 署名。
+  理由：规则是经验总结而非合规意见，公开对外提供会构成事实上的
+        「合规意见服务」，带来法律风险。本项目不做、不建议、不授权。
+  P2-3「简易 MCP Server」本期不实施（属择机迭代）：如未来实施，
+  仅限内网环回复用，仍禁止任何公网暴露与公开 SaaS 形态。
+
+【8. 长期维护：季度复核机制】
+  8.1 每季度人工核对官方入口后执行 rfe meta --set-review 记录复核日期。
+  8.2 rfe doctor 分级标记：91-180 天未核实 → RFE-DR-101；
+      超过 180 天或无核实日期 → RFE-DR-102。
+  8.3 逐条核实后执行 rfe verify --id <ID> --confidence high。
+  8.4 每份输出报告强制附带知识库复核时间戳与第 6 节完整免责声明。
+
+【9. 安装与 Release 部署（降低部署成本）】
+  9.1 从 GitHub Release 下载 fuzzy-reverse-flow-v1.3.0.zip，核对页面 SHA256。
+  9.2 解压到 ~/.workbuddy/skills/fuzzy-reverse-flow/（WorkBuddy）
+      或 ~/.codex/skills/fuzzy-reverse-flow/（Codex CLI）。
+  9.3 执行 python scripts/rfe.py init，再执行 rfe migrate --check。
+  9.4 执行 python scripts/selftest.py，应输出「全部通过」。
+  9.5 与 vague-to-product 同级放置，即可被 v2p plan 单向调用。
+  9.6 推广路径：自用提效 → GitHub 开源 Release；拦截公开 SaaS，明确禁止
+      公开 SaaS 产品化。
+
+【10. 发版校验（维护者）】
+  python _check_docs.py                      校验源码与 README / 使用说明.txt 一致
+  python _check_docs.py --zip dist/<包名>.zip  连发布包内文档一起比对
+  全部 PASS 才允许发版。发版固定顺序：
+  改代码 → 更新 README.md 与使用说明.txt → 跑校验 → 组装发布包 →
+  再跑带 --zip 的校验 → 提交推送 → 上传 / 替换 Release 附件。
+
+================================================================================
+仓库：https://github.com/zhangyongxin-1124/fuzzy-reverse-flow
+配套：https://github.com/zhangyongxin-1124/vague-to-product
+MIT License ｜ Copyright (c) 2026 张勇鑫 (Zhang Yongxin) ｜ 转载请保留署名
+================================================================================

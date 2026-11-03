@@ -1,8 +1,8 @@
 ---
 name: fuzzy-reverse-flow
-description: 模糊问题逆流程推理工具（Fuzzy Reverse Flow）。把一个模糊想法（做App/小程序、开店、做招聘平台、做内容IP或短剧、办线下活动、做硬件、做AI服务）反推成"合规红线 + 资源底线 + 致命风险 + 倒排里程碑"的可执行施工图；并把每次推演萃取成领域规则与踩坑记忆，越用越准。当出现"我想做XX / 这个需要什么条件 / 帮我倒推路径 / 要办什么证 / 会不会违规 / 这事能不能干 / 从结果倒推 / 反向推导 / 逆流程"时使用。
+description: 模糊问题逆流程推理工具（Fuzzy Reverse Flow）。把一个模糊想法（做App/小程序、开店、做招聘平台、做内容IP或短剧、办线下活动、做硬件、做AI服务）反推成"合规红线 + 资源底线 + 致命风险 + 倒排里程碑"的可执行施工图；并把每次推演萃取成领域规则与踩坑记忆，越用越准。当出现"我想做XX / 这个需要什么条件 / 帮我倒推路径 / 要办什么证 / 会不会违规 / 这事能不能干 / 从结果倒推 / 反向推导 / 逆流程"时使用。 v1.3.0 新增：`rfe migrate` 知识库结构版本迁移（schema_version=2，只读种子库 kb_seed/ 永不写入、自动备份、字段规范化与 fingerprint 去重）；`rfe doctor` 季度复核 91-180 天 / 过期 >180 天分级并输出 RFE-DR-* 统一问题编码；每份输出报告强制附带知识库复核时间戳与完整免责声明；明确禁止公开 SaaS 产品化。
 description_en: Fuzzy Reverse Flow — turns a vague idea into a reverse-engineered execution plan: compliance redlines, resource floors, fatal risks, and a backward-scheduled milestone tree. Extracts reusable domain rules and pitfall memory after each run. Use for "I want to build X / what does it require / reverse the path / what licenses do I need / is this legal / work backward from the outcome".
-version: 1.2.0
+version: 1.3.0
 license: MIT
 ---
 
@@ -255,3 +255,14 @@ python "<S>/scripts/rfe.py" audit --plan report.md --domain "电商平台"
 | `assets/templates/*` | 倒排期任务书 / 规则卡 / 坑卡 / 报告骨架 |
 
 > 私有推演案例（电商 App、招聘小程序）**不随包发布**，存放于仓库外的 `../fuzzy-reverse-flow-私有案例/`。需要参考输出形态时，直接按第 6 节报告总模板生成，不要去找不存在的示例文件。
+
+---
+
+## 使用边界与能力档（v2.3.0 / v1.3.0 硬约束）
+
+1. 本技能是本地文件 + Python CLI + 落盘知识库，**没有 HTTP 服务 / MCP Server / 云端 API**；MIT 只授权使用，不提供远程调用入口。
+2. 能力分三档：A 档（宿主能读文件+执行命令，完整能力）、B 档（本地召回规则后注入模型 API）、C 档（网页聊天 / 手机 App，只能降级到方法论提示词）。**网页聊天与手机只能降级到 C 档**，不得伪装成能读取规则库。
+3. 调用前必须完成 README「零、使用前提与能力边界」的 12 项自检清单。
+4. **允许**：自用、内网团队复用（如需服务化仅绑定 127.0.0.1 环回）、GitHub 开源与 Release。**禁止**：公开 SaaS 产品化、对外经营性 API、面向不特定公众的付费服务、把规则库当商业合规数据服务售卖。
+5. 每份输出报告强制附带知识库复核时间戳与完整免责声明 7 条；规则为经验总结，不构成法律意见，上线前必须人工向官方核实。
+6. 跨工具告警使用统一问题编码，规范见 `references/issue-codes.md`；发版一致性由 `_check_docs.py` 强制校验。

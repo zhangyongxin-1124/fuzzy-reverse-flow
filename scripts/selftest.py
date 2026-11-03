@@ -166,6 +166,22 @@ def main() -> int:
     check("stats 可运行", "规则总数" in r.stdout, r.stdout[-200:])
 
     # [9] 开源合规：原创性自查必须通过（防止后续提交夹带第三方代码/文本）
+    print()
+    print("[8b] migrate：结构版本迁移与只读种子库分层")
+    r = run("migrate", "--check", kb=tmp)
+    check("migrate --check 只报告不写入", r.returncode == 0
+          and "--check" in r.stdout and "只读种子库" in r.stdout, r.stdout[-300:])
+    r = run("migrate", kb=tmp)
+    check("migrate 执行成功", r.returncode == 0
+          and "schema_version=2" in r.stdout, r.stdout[-300:])
+    meta_p = Path(tmp) / "kb_meta.json"
+    check("kb_meta 写入 schema_version=2", meta_p.exists()
+          and json.loads(meta_p.read_text(encoding="utf-8")).get("schema_version") == 2)
+    check("迁移生成备份文件", len(list(Path(tmp).glob("*.backup-v0-*.jsonl"))) >= 1)
+    r = run("doctor", kb=tmp)
+    check("doctor 输出统一问题编码 RFE-DR-*", "RFE-DR-" in r.stdout, r.stdout[-300:])
+    check("只读种子库未被写入", not list((ROOT / "kb_seed").glob("*.backup*")))
+
     print("\n[9] provenance_check 原创性自查")
     checker = Path(__file__).resolve().parent / "provenance_check.py"
     r = subprocess.run([sys.executable, str(checker)], capture_output=True, text=True,

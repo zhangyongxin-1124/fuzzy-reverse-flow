@@ -89,6 +89,13 @@ def main() -> int:
 
     if not args.no_check:
         print("\n[前置检测]")
+        required_docs = ["README.md", "使用说明.txt", "CHANGELOG.md", "PROVENANCE.md",
+                         "LICENSE", "SKILL.md", "_check_docs.py", "references/issue-codes.md"]
+        missing = [f for f in required_docs if not (SKILL_ROOT / f).is_file()]
+        if missing:
+            print("  ✗ 发版必备文档缺失：" + "、".join(missing))
+            return 1
+        print("  ✓ 发版必备文档齐备（README / 使用说明.txt / 校验脚本 / 编码规范）")
         errs, warns, _ = verify(SKILL_ROOT)
         for w in warns:
             print(f"  ! {w}")
