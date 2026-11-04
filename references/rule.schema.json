@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/rfe/rule.schema.json",
+  "title": "Fuzzy Reverse Flow Rule Card",
+  "type": "object",
+  "required": ["rule", "domain", "trigger", "severity", "type"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^RULE-[A-Z]+-[0-9]{4}$" },
+    "domain": {
+      "type": "string",
+      "enum": ["通用", "电商平台", "本地生活", "招聘与人力", "内容与短剧", "自媒体",
+               "教育培训", "医疗健康", "餐饮食品", "线下活动", "软件与小程序",
+               "硬件制造", "金融与投资", "AI生成服务"]
+    },
+    "subdomain": { "type": "string" },
+    "rule": {
+      "type": "string",
+      "minLength": 12,
+      "description": "完整的「如果…那么必须…」句式，含后果更佳"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["compliance", "resource", "risk", "path", "misconception"]
+    },
+    "severity": { "type": "string", "enum": ["redline", "blocker", "advisory"] },
+    "trigger": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "probe": { "type": "array", "items": { "type": "string" } },
+    "lead_time": { "type": "string" },
+    "basis": { "type": "string" },
+    "basis_level": {
+      "type": "string",
+      "enum": ["law", "regulation", "rule", "policy", "standard", "license",
+               "platform", "judicial", "practice"]
+    },
+    "verify_url": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "note": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "deprecated", "stale"] },
+    "verified_at": { "type": ["string", "null"] },
+    "hit_count": { "type": "integer", "minimum": 0 },
+    "source": { "type": "string", "enum": ["seed", "agent", "user"] },
+    "provenance": {
+      "type": "string",
+      "enum": ["rfe-original", "user-input", "third-party"],
+      "description": "内容来源性质：rfe-original=本仓库原创归纳；user-input=用户推演得出；third-party=引入外部规则（此时 upstream 必填）"
+    },
+    "upstream": {
+      "type": ["string", "null"],
+      "description": "若 provenance=third-party，必填来源名称与 URL，并确认其许可证允许再分发"
+    },
+    "created_at": { "type": "string" },
+    "fingerprint": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -18,7 +18,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 
 ## 零、使用前提与能力边界（必读）
 
-> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.4.0**，配套 vague-to-product **v2.5.0**。
+> 本项目是「本地文件 + Python CLI + 落盘知识库」，仓库内**没有任何 HTTP 服务、MCP Server 或云端 API**，不存在可供远程调用的地址。**MIT 解决的是「能不能拿去用」，不解决「别人怎么连上」。** 当前版本 **v1.4.0**，配套 vague-to-product **v2.5.1**。
 
 ### 0.1 三档能力边界（A / B / C）
 
@@ -64,7 +64,7 @@ $ python scripts/rfe.py recall -q "我想做个类似淘宝的App" --top 3
 - **允许**：个人自用；内网团队多个 Agent 复用（如需服务化，仅允许绑定 `127.0.0.1` 环回地址，不得对外暴露）；GitHub 开源与 Release 分发。
 - **禁止**：公开 SaaS 产品化；对外经营性 API；面向不特定公众的付费服务；把规则库当作商业合规数据服务售卖；删除或改写 MIT 署名。
 - **理由**：规则是经验总结而非合规意见，公开对外提供会构成事实上的「合规意见服务」，带来法律风险。本项目不做、不建议、不授权。
-- **P2-3 已实施为仅本地形态（vague-to-product v2.5.0）**：配套技能的本地 stdio MCP Server 只读、无网络监听；本仓库自身仍无任何 MCP/HTTP 服务，禁止公开 SaaS 边界不变。
+- **P2-3 已实施为仅本地形态（vague-to-product v2.5.1）**：配套技能的本地 stdio MCP Server 只读、无网络监听；本仓库自身仍无任何 MCP/HTTP 服务，禁止公开 SaaS 边界不变。
 
 ### 0.5 章节指引
 
@@ -227,7 +227,7 @@ sha256sum -c SHA256SUMS.txt      # macOS/Linux，解压后在技能根目录执�
 certutil -hashfile <file> SHA256 # Windows 校验整包
 ```
 
-> ⚠️ **Windows 解压注意**：包内 `assets/templates/倒排期任务书.md`、`推演报告骨架.md` 为中文文件名（zip 已正确设置 UTF-8 标志位）。
+> ⚠️ **Windows 解压注意**：包内 `templates/倒排期任务书.md`、`推演报告骨架.md` 为中文文件名（zip 已正确设置 UTF-8 标志位）。
 > 请用**资源管理器双击**或 `Expand-Archive` 解压；**不要用 Git Bash（MSYS）自带的 `unzip`**——它按系统 GBK 解码，会把中文文件名变成乱码，导致 `sha256sum -c` 报 `No such file or directory`。这不是包坏了，是解压工具的问题。
 
 ---
@@ -347,9 +347,10 @@ fuzzy-reverse-flow/
 │   ├── install.py            # 一键安装 + 四层检测
 │   ├── package.py            # 打包发布（自动排除私有内容）
 │   ├── provenance_check.py   # 原创性自查
-│   ├── selftest.py           # 端到端自测（含原创性自查）
-│   └── schema/rule.schema.json
-└── assets/templates/         # 报告骨架 / 倒排期 / 规则卡 / 坑卡
+│   └── selftest.py           # 端到端自测（含原创性自查）
+├── references/
+│   └── rule.schema.json      # 规则/坑卡字段契约（JSON Schema）
+└── templates/                # 报告骨架 / 倒排期 / 规则卡 / 坑卡
 ```
 
 > **内置公开案例**（`examples/`，如娱乐小程序逆向施工图）为真实推演输出整理，无隐私信息，随仓库提交并随包分发。含真实项目与商业信息的**私有推演案例**（电商 App、招聘小程序）仍不随包发布，存放于仓库外的 `../fuzzy-reverse-flow-私有案例/`；自测不依赖任何案例文件。
@@ -411,7 +412,7 @@ MIT © 2026 张勇鑫 (Zhang Yongxin)
 ## 附录 D · GitHub Release 部署与发版校验
 
 1. 从 GitHub Release 下载 `fuzzy-reverse-flow-v1.4.0.zip`，核对页面给出的 **SHA256**。
-2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.5.0.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
+2. 解压到 `~/.workbuddy/skills/<技能名>/`（WorkBuddy）或 `~/.codex/skills/<技能名>/`（Codex CLI）；vague-to-product-v2.5.1.zip 需同级放置（或用 `RFE_SCRIPT` 指定）。
 3. 执行 `python scripts/selftest.py`，应输出「全部通过」；再跑 `rfe init` → `rfe migrate --check`，完成 0.2 节 12 项自检。
 4. 维护者发版固定顺序：**改代码 → 更新 README.md 与 使用说明.txt → `python _check_docs.py` → 组装发布包 → `python _check_docs.py --zip dist/<包名>.zip` → 提交推送 → 上传 / 替换 Release 附件**。两轮校验全部 PASS 才允许发版。
 

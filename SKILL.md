@@ -1,11 +1,22 @@
 ---
 name: fuzzy-reverse-flow
-description: 模糊问题逆流程推理工具（Fuzzy Reverse Flow）。把一个模糊想法（做App/小程序、开店、做招聘平台、做内容IP或短剧、办线下活动、做硬件、做AI服务）反推成"合规红线 + 资源底线 + 致命风险 + 倒排里程碑"的可执行施工图；并把每次推演萃取成领域规则与踩坑记忆，越用越准。当出现"我想做XX / 这个需要什么条件 / 帮我倒推路径 / 要办什么证 / 会不会违规 / 这事能不能干 / 从结果倒推 / 反向推导 / 逆流程"时使用。 v1.3.0 新增：`rfe migrate` 知识库结构版本迁移（schema_version=2，只读种子库 kb_seed/ 永不写入、自动备份、字段规范化与 fingerprint 去重）；`rfe doctor` 季度复核 91-180 天 / 过期 >180 天分级并输出 RFE-DR-* 统一问题编码；每份输出报告强制附带知识库复核时间戳与完整免责声明；明确禁止公开 SaaS 产品化。
-description_en: Fuzzy Reverse Flow — turns a vague idea into a reverse-engineered execution plan: compliance redlines, resource floors, fatal risks, and a backward-scheduled milestone tree. Extracts reusable domain rules and pitfall memory after each run. Use for "I want to build X / what does it require / reverse the path / what licenses do I need / is this legal / work backward from the outcome".
+display_name: 模糊想法逆流程推理
+display_name_en: Fuzzy Reverse Flow
+description: 模糊问题逆流程推理工具。把一个模糊想法（做App/小程序、开店、做招聘平台、做内容IP或短剧、办线下活动、做硬件、做AI服务）反推成"合规红线 + 资源底线 + 致命风险 + 倒排里程碑"的可执行施工图；并把每次推演萃取成领域规则与踩坑记忆，越用越准。当出现"我想做XX / 这个需要什么条件 / 帮我倒推路径 / 要办什么证 / 会不会违规 / 这事能不能干 / 从结果倒推 / 反向推导 / 逆流程"时使用。
+description_zh: 输入一个模糊想法，输出合规红线、资源底线、致命风险与倒排里程碑。内置 103 条领域规则库与踩坑记忆，零依赖本地运行，越用越准。
+description_en: "Fuzzy Reverse Flow — turns a vague idea into a reverse-engineered execution plan: compliance redlines, resource floors, fatal risks, and a backward-scheduled milestone tree. Extracts reusable domain rules and pitfall memory after each run. Use for \"I want to build X / what does it require / reverse the path / what licenses do I need / is this legal / work backward from the outcome\"."
+examples_zh:
+  - "我想做一个宠物用品电商小程序，需要什么条件和资质？"
+  - "帮我倒推一下做社区团购平台的路径，以及最可能死在哪一步"
+  - "办一场 300 人的线下沙龙需要哪些许可？会不会有违规风险？"
+examples_en:
+  - "I want to build a pet supplies e-commerce mini program. What do I need?"
+  - "Work backward from launching a community group-buying platform and tell me where it dies."
+  - "What permits does a 300-person offline event need? Any compliance risk?"
 version: 1.4.0
+author: "张勇鑫"
 license: MIT
 ---
-
 # 模糊问题逆流程推理工具（Fuzzy Reverse Flow）
 
 > 原名：逆向工程推理引擎（Reverse-Fuzzy Engine）。内部代号、命令与知识库路径未变，仍是 `rfe`。
@@ -15,6 +26,8 @@ license: MIT
 **核心信念**：正向规划会漏掉前提，逆向逼问才能暴露门槛。**先证伪，再证成。**
 
 **内置完整案例**：`examples/娱乐小程序-逆向施工图.md` —— 输入「我想做一个娱乐小程序」的 v1.3.0 真实推演输出整理（19 条合规红线 / 10 个死亡点 / 8 个里程碑 / 规则萃取回执）。动笔前先读它，作为输出形态与深度的对照基准；案例索引与复现步骤见 `examples/README.md`。
+
+**v1.3.0 起提供的能力**：`rfe migrate` 知识库结构版本迁移（schema_version=2，只读种子库 `kb_seed/` 永不写入、自动备份、字段规范化与 fingerprint 去重）；`rfe doctor` 季度复核 91-180 天 / 过期 >180 天分级并输出 `RFE-DR-*` 统一问题编码；每份输出报告强制附带知识库复核时间戳与完整免责声明；明确禁止公开 SaaS 产品化。
 
 ---
 
@@ -182,7 +195,7 @@ cat card.json | python "<S>/scripts/rfe.py" add
 python "<S>/scripts/rfe.py" pitfall add --file <坑卡.json>
 ```
 
-规则卡字段见 `references/rule-schema.md`；可用 `assets/templates/rule-card.json` 起步。
+规则卡字段见 `references/rule-schema.md`；可用 `templates/rule-card.json` 起步。
 重名/重复规则由指纹自动去重并累加 `hit_count`（命中越多，下次排位越前）。
 
 ### 5.3 回告用户
@@ -254,7 +267,7 @@ python "<S>/scripts/rfe.py" audit --plan report.md --domain "电商平台"
 | `scripts/package.py` | 打包发布（自动排除私有案例与本地知识库） |
 | `scripts/provenance_check.py` | 开源发布前原创性自查（依赖/版权痕迹/外链/来源标注） |
 | `PROVENANCE.md` | 溯源与原创性声明（哪部分是谁的、法规引用为何不侵权） |
-| `assets/templates/*` | 倒排期任务书 / 规则卡 / 坑卡 / 报告骨架 |
+| `templates/*` | 倒排期任务书 / 规则卡 / 坑卡 / 报告骨架 |
 
 > 私有推演案例（电商 App、招聘小程序）**不随包发布**，存放于仓库外的 `../fuzzy-reverse-flow-私有案例/`。需要参考输出形态时，直接按第 6 节报告总模板生成，不要去找不存在的示例文件。
 

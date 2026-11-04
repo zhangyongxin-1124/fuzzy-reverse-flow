@@ -63,7 +63,7 @@ SKILL = read("SKILL.md")
 _name_m = re.search(r"(?m)^name:\s*([^\s]+)", SKILL)
 NAME = _name_m.group(1).strip() if _name_m else ROOT.name
 VERSION = frontmatter_version(SKILL)
-PEER_VERSION = {"vague-to-product": "2.5.0", "fuzzy-reverse-flow": "1.4.0"}.get(NAME, "")
+PEER_VERSION = {"vague-to-product": "2.5.1", "fuzzy-reverse-flow": "1.4.0"}.get(NAME, "")
 PEER_NAME = {"vague-to-product": "fuzzy-reverse-flow", "fuzzy-reverse-flow": "vague-to-product"}.get(NAME, "")
 
 README = read("README.md")

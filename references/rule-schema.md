@@ -1,6 +1,6 @@
 # 规则卡 / 坑卡字段定义
 
-> 两份 JSON 是工具的持久化契约。字段改动需同步 `scripts/schema/rule.schema.json` 与 `scripts/rfe.py`。
+> 两份 JSON 是工具的持久化契约。字段改动需同步 `references/rule.schema.json` 与 `scripts/rfe.py`。
 
 ---
 
