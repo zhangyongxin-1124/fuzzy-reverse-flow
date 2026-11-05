@@ -1,6 +1,6 @@
 ================================================================================
 fuzzy-reverse-flow（模糊问题逆流程推理工具） 使用说明
-版本：v1.4.0    对应 vague-to-product v2.6.0
+版本：v1.5.0    对应 vague-to-product v2.7.0
 许可证：MIT License    Copyright (c) 2026 张勇鑫 (Zhang Yongxin)
 本文件与 README.md 同为发版必检文档，内容必须与代码完全一致。
 ================================================================================
@@ -143,6 +143,17 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
   本地 stdio MCP Server 只读、无网络监听；本仓库自身无 MCP/HTTP 服务，
   仅限内网环回复用，仍禁止任何公网暴露与公开 SaaS 形态。
 
+【7b. v1.5.0 新增：超期降权 / 红线保险 / 众筹 / 出海图层】
+  recall 超期降权：法规类规则超 90 天未核实 → 匹配权重自动降 20%，
+    输出标注「⚠ [RFE-DR-103 超期降权] 可能过时——请以最新官方文件为准」。
+  红线错误保险：所有红线级规则输出自动附「不构成法律意见，重大决策
+    请咨询执业律师」——合规建议的主动风控。
+  对话模式：docs/对话模式推演引导.md——不用命令行、纯聊天跑完整推演。
+  规则众筹：docs/规则库众筹指南.md + Issue 模板「踩坑规则提交」
+    （提交 → 待审区 → 审核 → 入库随版本分发并致谢）。
+  出海图层（实验性）：references/regulation-global.md——GDPR/CCPA
+    方向性条目，出海场景与中国本土规则叠加校验。
+
 【8. 长期维护：季度复核机制】
   8.1 每季度人工核对官方入口后执行 rfe meta --set-review 记录复核日期。
   8.2 rfe doctor 分级标记：法规类规则超 90 天 → RFE-DR-103（订阅
@@ -153,7 +164,7 @@ MCP Server 或云端 API，不存在可供远程调用的地址。MIT 解决的�
   8.4 每份输出报告强制附带知识库复核时间戳与第 6 节完整免责声明。
 
 【9. 安装与 Release 部署（降低部署成本）】
-  9.1 从 GitHub Release 下载 fuzzy-reverse-flow-v1.4.0.zip，核对页面 SHA256。
+  9.1 从 GitHub Release 下载 fuzzy-reverse-flow-v1.5.0.zip，核对页面 SHA256。
   9.2 解压到 ~/.workbuddy/skills/fuzzy-reverse-flow/（WorkBuddy）
       或 ~/.codex/skills/fuzzy-reverse-flow/（Codex CLI）。
   9.3 执行 python scripts/rfe.py init，再执行 rfe migrate --check。

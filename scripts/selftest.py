@@ -210,6 +210,37 @@ def main() -> int:
     check("自查脚本通过（无第三方痕迹）", r.returncode == 0, (r.stdout or r.stderr)[-400:])
     check("自查覆盖规则来源标注", "全部标注 source" in r.stdout, r.stdout[-300:])
 
+    # [10] v1.5.0：recall 超期降权 + 红线错误保险 + 新文档
+    print("\n[10] v1.5.0 recall 超期降权与红线提示")
+    # 独立干净 kb（避免 [8b] migrate 字段规范化影响结构断言）
+    tmp2 = tempfile.mkdtemp(prefix="rfe_selftest_v150_")
+    reg2 = {"id": "R-REG-V150", "rule": "v150 测试法规规则：平台需办理某备案",
+            "tags": ["法规"], "domain": "测试",
+            "verified_at": (date.today() - timedelta(days=100)).isoformat(),
+            "fingerprint": "fp-reg-v150", "source": "selftest", "confidence": "medium"}
+    red = {"id": "R-RED-V150", "rule": "v150 红线测试：经营性招聘需许可证",
+           "severity": "redline", "tags": ["招聘"], "domain": "测试",
+           "verified_at": date.today().isoformat(),
+           "fingerprint": "fp-red-v150", "source": "selftest", "confidence": "high"}
+    with open(Path(tmp2) / "rules.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(reg2, ensure_ascii=False) + "\n")
+        f.write(json.dumps(red, ensure_ascii=False) + "\n")
+    r = run("recall", "--query", "平台需办理某备案", "--top", "5", kb=tmp2)
+    check("recall 对超期法规规则输出降权标注（RFE-DR-103 超期降权）",
+          r.returncode == 0 and "超期降权" in r.stdout and "可能过时" in r.stdout, r.stdout[-400:])
+    check("recall 红线规则自动附律师提示（错误保险）",
+          "请咨询执业律师" in r.stdout, r.stdout[-300:])
+    rfe_txt = (ROOT / "scripts" / "rfe.py").read_text(encoding="utf-8", errors="replace")
+    check("rfe.py 含模块级 _is_reg/_reg_overdue_days（降权与 doctor 共用判定）",
+          "def _is_reg(" in rfe_txt and "def _reg_overdue_days(" in rfe_txt)
+    for new_doc, kw in (("docs/对话模式推演引导.md", "纯聊天完成一次完整推演"),
+                        ("docs/规则库众筹指南.md", "待审区"),
+                        ("references/regulation-global.md", "GDPR"),
+                        (".github/ISSUE_TEMPLATE/踩坑规则提交.md", "踩坑规则提交")):
+        fp = ROOT / new_doc
+        check(f"新增文件存在且含关键内容：{new_doc}", fp.is_file()
+              and kw in fp.read_text(encoding="utf-8", errors="replace"))
+
     print(f"\n结果：通过 {len(PASS)} 项，失败 {len(FAIL)} 项")
     if FAIL:
         for f in FAIL:

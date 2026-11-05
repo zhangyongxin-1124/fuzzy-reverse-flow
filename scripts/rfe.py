@@ -337,6 +337,8 @@ def cmd_recall(args) -> int:
         rdom = r.get("domain", "通用")
         if top_domains and rdom not in top_domains and rdom != "通用":
             s *= 0.55  # 领域不匹配降权，减少跨领域噪声
+        if _reg_overdue_days(r) is not None:
+            s *= 0.8  # 法规类超 90 天未核实 → 匹配权重降 20%（RFE-DR-103 超期降权）
         scored.append((s, r))
     scored = [x for x in scored if x[0] > 0.4]
     scored.sort(key=lambda x: (-x[0], SEVERITY_ORDER.get(x[1].get("severity", "advisory"), 2)))
@@ -369,6 +371,10 @@ def cmd_recall(args) -> int:
             print("  " + " | ".join(extra))
         if r.get("status") == "deprecated":
             print("  ! 该规则已标注废止/不适用，请勿再作为要求引用")
+        if _reg_overdue_days(r) is not None:
+            print(f"  {REG_OVERDUE_NOTE}")
+        if sev == "redline":
+            print(f"  {REDLINE_DISCLAIMER}")
         print()
     _touch_hits([r.get("id") for _, r in top])
     return 0
@@ -384,6 +390,33 @@ def _verified_label(rule: dict) -> str:
         return str(v)
     days = (date.today() - d).days
     return f"{v}（{days}天前）" + (" 需复核" if days > 180 else "")
+
+
+def _is_reg(item: dict) -> bool:
+    """法规类规则判定（模块级，recall 降权与 doctor 复用）。"""
+    blob = " ".join([str(item.get("category", ""))]
+                    + [str(t) for t in (item.get("tags") or [])])
+    return ("regulation" in blob.lower()) or ("法规" in blob) or ("监管" in blob)
+
+
+def _reg_overdue_days(rule: dict) -> int | None:
+    """法规类规则超 90 天未核实 → 返回天数；否则 None。"""
+    if not _is_reg(rule):
+        return None
+    v = rule.get("verified_at")
+    if not v:
+        return 9999
+    try:
+        days = (date.today() - date.fromisoformat(str(v)[:10])).days
+    except ValueError:
+        return 9999
+    return days if days > 90 else None
+
+
+REDLINE_DISCLAIMER = ("⚖ 红线结论基于规则库经验总结（复核时间见上），不构成法律意见；"
+                      "请以主管部门现行有效文本为准，重大决策请咨询执业律师。")
+REG_OVERDUE_NOTE = ("⚠ [RFE-DR-103 超期降权] 本条法规规则超 90 天未核实，可能过时——"
+                    "已降低匹配权重；请以最新官方文件为准并尽快核实（references/regulation-watch.md）。")
 
 
 def _touch_hits(ids: list) -> None:
@@ -931,10 +964,7 @@ def cmd_doctor(args) -> int:
         print(f"[RFE-DR-001] 重复 ID: {', '.join(sorted(map(str, dup)))}")
     quarterly, stale, reg_overdue = [], [], []
 
-    def _is_reg(item: dict) -> bool:
-        blob = " ".join([str(item.get("category", ""))]
-                        + [str(t) for t in (item.get("tags") or [])])
-        return ("regulation" in blob.lower()) or ("法规" in blob) or ("监管" in blob)
+    # _is_reg 使用模块级定义（与 recall 超期降权共用同一判定）
 
     for r in rules:
         if not r.get("rule"):

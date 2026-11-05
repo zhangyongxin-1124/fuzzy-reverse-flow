@@ -13,7 +13,7 @@ examples_en:
   - "I want to build a pet supplies e-commerce mini program. What do I need?"
   - "Work backward from launching a community group-buying platform and tell me where it dies."
   - "What permits does a 300-person offline event need? Any compliance risk?"
-version: 1.4.0
+version: 1.5.0
 author: "张勇鑫"
 license: MIT
 ---
